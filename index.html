@@ -3,16 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f3ea" id="themeColorMeta" />
     <meta name="description" content="ßhells — the AI-powered financial platform for renters. Move, deposit, lease, rent and rewards in one calm place." />
     <link rel="icon" href="data:," />
     <title>ßhells — Your rent should work harder for you</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script>
+      try { var _t = localStorage.getItem('sshells-theme'); if (_t === 'dark' || _t === 'light') document.documentElement.setAttribute('data-theme', _t); } catch (e) {}
+    </script>
     <style>
       :root {
-        color-scheme: light;
+        color-scheme: light dark;
         --bg: #f7f3ea;
         --bg-2: #efe8d8;
         --surface: #fffdf8;
@@ -84,6 +88,8 @@
       .nav-links a { text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--ink-2); }
       .nav-links a:hover { color: var(--ink); }
       .nav-cta { margin-left: 1rem; }
+      .theme-toggle { margin-left: auto; width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1.05rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+      .theme-toggle:hover { border-color: var(--gold); }
       .menu-btn { display: none; margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 10px; padding: .5rem .6rem; cursor: pointer; color: var(--ink); }
       .mobile-menu { display: none; border-top: 1px solid var(--line); padding: 1rem 0 1.25rem; }
       .mobile-menu.open { display: grid; gap: .9rem; }
@@ -851,6 +857,49 @@
       .survey-success{text-align:center;padding:1rem 0}
       .survey-success h3{font-size:1.4rem;margin:0 0 .6rem;color:var(--ink)}
       .survey-success p{color:var(--ink-2)}
+      /* Dark theme — enabled by the header toggle (data-theme="dark"). Light is the default. */
+      html[data-theme="dark"] { color-scheme: dark; }
+      html[data-theme="dark"] { --bg: #081120;
+          --bg-2: #0a1626;
+          --surface: #101e33;
+          --surface-2: #16283f;
+          --ink: #edf1f7;
+          --ink-2: #b3bdd0;
+          --ink-3: #7e8aa3;
+          --line: #243650;
+          --navy-soft: #1b2f4c;
+          --gold: #C08A1E;
+          --gold-deep: #C08A1E;
+          --gold-soft: #2c2413;
+          --shadow: 0 18px 44px -18px rgba(0, 0, 0, .65); }
+      html[data-theme="dark"] .btn-primary { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .btn-primary:hover { background: var(--gold); filter: brightness(1.08); }
+      html[data-theme="dark"] .eyebrow { color: var(--gold); }
+      html[data-theme="dark"] .blob { opacity: .22; }
+      html[data-theme="dark"] .blob-dot { background: var(--gold); }
+      html[data-theme="dark"] .chip { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .bar i { background: var(--gold); }
+      html[data-theme="dark"] .thesis { background: var(--navy-deep); }
+      html[data-theme="dark"] .jstep.active { background: var(--gold); border-color: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .teaser { background: var(--navy-deep); border: 1px solid var(--line); }
+      html[data-theme="dark"] .field input[type="range"] { accent-color: var(--gold); }
+      html[data-theme="dark"] .partners { background: var(--navy-deep); }
+      html[data-theme="dark"] .consent input { accent-color: var(--gold); }
+      html[data-theme="dark"] .form-err { color: #f0937c; }
+      html[data-theme="dark"] .demo-view { --teal: #57c7ab; --teal-ink: #a9e6d4; --mint: #14332a; --mint-line: #24584a; }
+      html[data-theme="dark"] .demo-side { background: var(--navy-deep); }
+      html[data-theme="dark"] .bar i { background: var(--gold); }
+      html[data-theme="dark"] .ov-move { background: var(--navy-deep); border: 1px solid var(--line); }
+      html[data-theme="dark"] .ov-next .big { color: #23180a; }
+      html[data-theme="dark"] .btn-teal { color: #052e25; }
+      html[data-theme="dark"] .btn-danger-text { color: #f0937c; }
+      html[data-theme="dark"] .attention-card .big { color: #23180a; }
+      html[data-theme="dark"] .msg.you { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .fab { border: 1px solid var(--line); }
+      html[data-theme="dark"] .landa-head { background: var(--navy-deep); }
+      html[data-theme="dark"] .card-coach { background: var(--surface); color: var(--ink); border: 1.5px solid var(--gold); }
+      html[data-theme="dark"] .card-coach b { color: var(--ink); }
+      html[data-theme="dark"] .card-coach .foot { border-top-color: var(--line); }
     </style>
   </head>
   <body>
@@ -870,6 +919,7 @@
             <button class="btn btn-gold btn-small nav-cta" type="button" data-open-demo>Explore the demo
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch theme">☾</button>
             <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
             </button>
@@ -2627,6 +2677,25 @@
         } else {
           document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
         }
+      })();
+    </script>
+    <script>
+      (function () {
+        var btn = document.getElementById('themeToggle');
+        var meta = document.getElementById('themeColorMeta');
+        function render() {
+          var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+          btn.textContent = dark ? '\u2600' : '\u263e';
+          btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+          if (meta) meta.setAttribute('content', dark ? '#081120' : '#f7f3ea');
+        }
+        btn.addEventListener('click', function () {
+          var dark = document.documentElement.getAttribute('data-theme') !== 'dark';
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+          try { localStorage.setItem('sshells-theme', dark ? 'dark' : 'light'); } catch (e) {}
+          render();
+        });
+        render();
       })();
     </script>
   </body>
