@@ -188,6 +188,21 @@
   html[data-theme="dark"] .flip-back.yellow{background:#33291A}
   html[data-theme="dark"] .flip-back h3{color:#fff}
   html[data-theme="dark"] .flip-back p{color:#C9D2DE}
+
+  /* request-a-demo band + form (mirrors the waitlist band) */
+  .dr-band{background:var(--ink);border-radius:28px;padding:56px 48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  @media(max-width:900px){.dr-band{grid-template-columns:1fr}}
+  .dr-form{display:grid;gap:16px}
+  .dr-form label{color:#dbe2ec;font-size:14px;font-weight:600;display:block;margin-bottom:6px}
+  .dr-form input,.dr-form select,.dr-form textarea{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;background:#fff;color:var(--ink);box-sizing:border-box;font-family:inherit}
+  .dr-consent{display:flex;gap:10px;color:#dbe2ec;font-size:14px;align-items:flex-start}
+  .dr-consent input{width:auto}
+  .dr-consent span{font-weight:400}
+  .dr-success{display:none;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:28px;color:#fff}
+  .dr-success.show{display:block}
+  .dr-success dl{margin:20px 0}
+  .dr-success dt{color:#9fb0c8;font-size:13px}
+  .dr-success dd{margin:2px 0 14px;color:#fff}
 </style>
 </head>
 <body>
@@ -195,14 +210,14 @@
 <div class="wrap">
   <nav>
     <div class="brand">ß<span>hells</span></div>
-    <div class="nav-right"><div class="nav-links"><a href="#how">How it works</a><a href="#partners">Partners</a><a href="#research">Research</a><a href="#faq">FAQ</a></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch theme">☾</button><a class="btn small" href="demo.html">Explore the demo →</a></div>
+    <div class="nav-right"><div class="nav-links"><a href="#how">How it works</a><a href="#partners">Partners</a><a href="#research">Research</a><a href="#faq">FAQ</a></div><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to dark theme" title="Switch theme">☾</button><a class="btn small" href="#demo-request">Request a demo</a></div>
   </nav>
 
   <section class="hero">
     <div class="eyebrow">Financial infrastructure for renters</div>
     <h1>Your rent should <em>work harder</em> for you.</h1>
     <p class="sub">Understand your lease in plain language, get recognised for every on-time payment, and earn rewards on the rent you already pay.</p>
-    <a class="btn" href="#waitlist">Join the waitlist</a>&nbsp;&nbsp;<a class="btn ghost" href="demo.html">Explore the demo →</a>
+    <a class="btn" href="#waitlist">Join the waitlist</a>&nbsp;&nbsp;<a class="btn ghost" href="#demo-request">Request a demo →</a>
   </section>
 </div>
 
@@ -315,12 +330,54 @@
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
-    <div class="demo-band">
-      <h2>Don't take our word for it.</h2>
-      <p>Explore an interactive preview of the product.</p>
-      <a class="btn" href="demo.html">Explore the demo →</a>
-      <p class="small">No sign-up. Try every feature freely — your changes reset when you end it.</p>
+  <section class="section" style="padding-top:0" id="demo-request">
+    <div class="dr-band">
+      <div>
+        <div class="eyebrow" style="color:var(--gold)">See it live</div>
+        <h2 style="color:#fff">Request a demo.</h2>
+        <p style="color:#dbe2ec">Tell us who you are and we'll set up a call to walk you through ßhells — including all four workspaces: renter, property manager, finance partner, and rewards partner.</p>
+      </div>
+      <div>
+        <form class="dr-form" id="demoRequestForm" novalidate>
+          <div>
+            <label for="drName">Name</label>
+            <input id="drName" name="name" type="text" autocomplete="name" placeholder="Your name" />
+          </div>
+          <div>
+            <label for="drEmail">Email address</label>
+            <input id="drEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label for="drRole">I'm interested as</label>
+            <select id="drRole" name="role">
+              <option value="Renter">Renter</option>
+              <option value="Property team">Property team</option>
+              <option value="Merchant">Merchant</option>
+              <option value="Financial partner">Financial partner</option>
+            </select>
+          </div>
+          <div>
+            <label for="drMessage">What would you like to see? (optional)</label>
+            <textarea id="drMessage" name="message" rows="3" placeholder="Anything specific — a workspace, a feature, a use case."></textarea>
+          </div>
+          <label class="dr-consent" for="drConsent">
+            <input id="drConsent" name="consent" type="checkbox" />
+            <span>ßhells may store my details and contact me about a demo.</span>
+          </label>
+          <button class="btn" type="submit">Request a demo &rarr;</button>
+          <p class="form-err" id="drError" role="alert">Please add your name, a valid email address, and tick the consent box so we may contact you.</p>
+        </form>
+        <div class="dr-success" id="drSuccess" role="status">
+          <h3>Thanks — we'll be in touch.</h3>
+          <dl>
+            <div><dt>Name</dt><dd id="drSumName">—</dd></div>
+            <div><dt>Email</dt><dd id="drSumEmail">—</dd></div>
+            <div><dt>Interested as</dt><dd id="drSumRole">—</dd></div>
+          </dl>
+          <p style="color:#dbe2ec">We'll email you to set up a call.</p>
+          <button class="btn ghost small" id="drReset" type="button">Send another request</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -363,7 +420,7 @@
       </div>
       <div class="eco-cta">
         <h3>Plug into the ecosystem.</h3>
-        <a class="btn" href="#waitlist" data-role-link="partner">Get in touch</a>
+        <a class="btn" href="#demo-request" data-role-link="partner">Get in touch</a>
       </div>
     </div>
   </section>
@@ -667,7 +724,7 @@
         /* partner CTA pre-selects a partner role */
         document.querySelectorAll("[data-role-link]").forEach(function (link) {
           link.addEventListener("click", function () {
-            document.getElementById("wlRole").value = "Property team";
+            var dr = document.getElementById("drRole"); if (dr) dr.value = "Property team";
           });
         });
         function downloadText(filename, text) {
@@ -752,6 +809,60 @@
           if (lm) lm.setAttribute("aria-expanded", flipped ? "true" : "false");
         });
       });
+    </script>
+<script>
+      (function () {
+        var form = document.getElementById("demoRequestForm");
+        var success = document.getElementById("drSuccess");
+        var error = document.getElementById("drError");
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var name = document.getElementById("drName").value.trim();
+          var email = document.getElementById("drEmail").value.trim();
+          var role = document.getElementById("drRole").value;
+          var message = document.getElementById("drMessage").value.trim();
+          var consent = document.getElementById("drConsent").checked;
+          var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+          if (!name || !emailOk || !consent) {
+            error.textContent = "Please add your name, a valid email address, and tick the consent box so we may contact you.";
+            error.classList.add("show");
+            if (!name) document.getElementById("drName").focus();
+            else if (!emailOk) document.getElementById("drEmail").focus();
+            else document.getElementById("drConsent").focus();
+            return;
+          }
+          error.classList.remove("show");
+          var btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          fetch(SUPABASE_URL + "/rest/v1/demo_requests", {
+            method: "POST",
+            headers: {
+              "apikey": SUPABASE_ANON_KEY,
+              "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+              "Content-Type": "application/json",
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({ name: name, email: email, role: role, message: message || null, consent: consent })
+          }).then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            document.getElementById("drSumName").textContent = name;
+            document.getElementById("drSumEmail").textContent = email;
+            document.getElementById("drSumRole").textContent = role;
+            form.style.display = "none";
+            success.classList.add("show");
+            success.scrollIntoView({ behavior: "smooth", block: "center" });
+          }).catch(function () {
+            btn.disabled = false;
+            error.textContent = "We couldn't save your request — please try again.";
+            error.classList.add("show");
+          });
+        });
+        document.getElementById("drReset").addEventListener("click", function () {
+          success.classList.remove("show");
+          form.reset();
+          form.style.display = "grid";
+        });
+      })();
     </script>
 </body>
 </html>
