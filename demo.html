@@ -1,0 +1,1869 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ßhells — Explore the demo</title>
+<style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f3ea;
+        --bg-2: #efe8d8;
+        --surface: #fffdf8;
+        --surface-2: #f2ecdd;
+        --ink: #12233c;
+        --ink-2: #47536a;
+        --ink-3: #75809a;
+        --line: #ddd3bd;
+        --navy: #0b1b33;
+        --navy-deep: #071426;
+        --navy-soft: #dde4ef;
+        --gold: #C08A1E;
+        --gold-deep: #a87408;
+        --gold-soft: #f8ecd0;
+        --shadow: 0 18px 44px -18px rgba(11, 27, 51, .30);
+        --radius: 18px;
+        --ease: cubic-bezier(.22, .68, .32, 1);
+      }
+            * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        font-family: "Archivo", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      img { max-width: 100%; display: block; }
+      a { color: inherit; }
+      :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+      .mono { font-family: "IBM Plex Mono", monospace; }
+      .wrap { width: min(1180px, 100% - 2.5rem); margin-inline: auto; }
+      section { padding: clamp(3.2rem, 7vw, 5.5rem) 0; }
+      h1, h2, h3 { line-height: 1.06; letter-spacing: -0.02em; margin: 0; }
+      h2 { font-size: clamp(1.9rem, 4.2vw, 2.9rem); font-weight: 800; max-width: 22ch; }
+      h3 { font-size: 1.08rem; font-weight: 700; }
+      p { margin: 0; }
+      .lede { font-size: clamp(1rem, 1.5vw, 1.15rem); color: var(--ink-2); max-width: 52ch; }
+      .sec-head { display: grid; gap: .8rem; margin-bottom: clamp(1.8rem, 4vw, 2.8rem); }
+      .tag {
+        font-family: "IBM Plex Mono", monospace; font-size: .74rem; font-weight: 600;
+        color: var(--gold-deep); display: inline-flex; align-items: center; gap: .5rem;
+        text-transform: uppercase; letter-spacing: .09em;
+      }
+      .tag::before { content: ""; width: 22px; height: 2px; background: var(--gold); display: inline-block; }
+      .sample-badge {
+        display: inline-flex; align-items: center; gap: .35rem;
+        font-family: "IBM Plex Mono", monospace; font-size: .66rem; font-weight: 600;
+        letter-spacing: .05em; text-transform: uppercase;
+        background: var(--gold-soft); color: var(--gold-deep);
+        border: 1px solid var(--line); border-radius: 999px; padding: .2rem .55rem; white-space: nowrap;
+      }
+
+      /* ---------- header ---------- */
+      header.site {
+        position: sticky; top: 0; z-index: 50;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid transparent;
+        transition: border-color .25s;
+      }
+      header.site.scrolled { border-bottom-color: var(--line); }
+      .nav { display: flex; align-items: center; gap: 2rem; padding: .9rem 0; }
+      .wordmark { font-weight: 900; font-size: 1.45rem; letter-spacing: -0.03em; text-decoration: none; display: inline-flex; align-items: baseline; gap: 0; }
+      .wordmark .shell { color: var(--gold-deep); }
+      .wordmark small { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: .62rem; letter-spacing: .08em; color: var(--ink-3); text-transform: uppercase; }
+      .nav-links { display: flex; gap: 1.6rem; margin-left: auto; }
+      .nav-links a { text-decoration: none; font-weight: 600; font-size: .95rem; color: var(--ink-2); }
+      .nav-links a:hover { color: var(--ink); }
+      .nav-cta { margin-left: 1rem; }
+      .theme-toggle { margin-left: auto; width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1.05rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+      .theme-toggle:hover { border-color: var(--gold); }
+      .menu-btn { display: none; margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 10px; padding: .5rem .6rem; cursor: pointer; color: var(--ink); }
+      .mobile-menu { display: none; border-top: 1px solid var(--line); padding: 1rem 0 1.25rem; }
+      .mobile-menu.open { display: grid; gap: .9rem; }
+      .mobile-menu a { text-decoration: none; font-weight: 600; }
+
+      .btn {
+        display: inline-flex; align-items: center; gap: .55rem;
+        font: inherit; font-weight: 700; font-size: .98rem;
+        padding: .8rem 1.5rem; border-radius: 999px; border: 1px solid transparent;
+        cursor: pointer; text-decoration: none; transition: transform .15s, background .15s, filter .15s;
+      }
+      .btn:active { transform: scale(.98); }
+      .btn-primary { background: var(--navy); color: #f4eedd; }
+      .btn-primary:hover { background: var(--navy-deep); }
+            .btn-gold { background: var(--gold); color: #23180a; }
+      .btn-gold:hover { filter: brightness(1.06); }
+      .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+      .btn-ghost:hover { border-color: var(--ink-3); }
+      .btn-small { padding: .55rem 1.1rem; font-size: .9rem; }
+
+      /* ---------- hero ---------- */
+      .hero { padding: clamp(2.8rem, 6vw, 5rem) 0 clamp(3.5rem, 7vw, 6rem); overflow: hidden; }
+      .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+      .eyebrow {
+        font-family: "IBM Plex Mono", monospace; font-size: .74rem; font-weight: 600;
+        letter-spacing: .12em; text-transform: uppercase; color: var(--navy);
+        display: inline-flex; align-items: center; gap: .6rem; margin-bottom: 1.3rem;
+      }
+            .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--gold); }
+      .hero h1 { font-size: clamp(3rem, 7.2vw, 5.4rem); font-weight: 900; letter-spacing: -0.035em; }
+      .hero h1 .gold-word { color: var(--gold); }
+      .hero .lede { margin-top: 1.5rem; font-size: clamp(1.05rem, 1.7vw, 1.25rem); }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2.1rem; }
+      .hero-note { margin-top: 1.1rem; font-size: .88rem; color: var(--ink-3); display: flex; gap: .5rem; align-items: center; }
+      .hero-note svg { flex: none; color: var(--gold-deep); }
+
+      /* hero card composition (inspo, refined) */
+      .hero-art { position: relative; min-height: 480px; }
+      .blob {
+        position: absolute; right: -4%; top: 6%; width: 78%; aspect-ratio: 1 / 1.04;
+        background: var(--gold); opacity: .38; border-radius: 46% 54% 58% 42% / 48% 44% 56% 52%;
+      }
+            .blob-dot {
+        position: absolute; right: 2%; top: 0; width: 74px; height: 74px; border-radius: 50%;
+        background: var(--navy); z-index: 3;
+      }
+            .art-card { position: absolute; border-radius: 22px; box-shadow: var(--shadow); }
+      .card-coach {
+        right: 4%; top: 13%; width: min(320px, 78%); z-index: 2;
+        background: var(--gold); color: #23180a; padding: 1.5rem 1.6rem 1.3rem;
+        transform: rotate(4deg);
+      }
+      .card-coach .brand { font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600; letter-spacing: .14em; display: flex; justify-content: space-between; align-items: center; }
+      .card-coach b { display: block; font-size: clamp(1.7rem, 3vw, 2.15rem); font-weight: 900; line-height: 1.08; letter-spacing: -0.02em; margin: 2.6rem 0 2.2rem; color: var(--navy); }
+            .card-coach .foot { border-top: 1.5px solid rgba(35,24,10,.35); padding-top: .7rem; font-family: "IBM Plex Mono", monospace; font-size: .66rem; font-weight: 600; letter-spacing: .12em; }
+      .card-points {
+        left: 0; bottom: 4%; width: min(300px, 74%); z-index: 4;
+        background: var(--surface); border: 1px solid var(--line); padding: 1.15rem 1.3rem 1.2rem;
+        transform: rotate(-5deg);
+      }
+      .card-points .row { display: flex; justify-content: space-between; align-items: center; }
+      .chip {
+        background: var(--navy); color: #f4eedd; font-family: "IBM Plex Mono", monospace;
+        font-size: .62rem; font-weight: 600; letter-spacing: .1em; border-radius: 999px; padding: .3rem .65rem;
+      }
+            .card-points .date { font-family: "IBM Plex Mono", monospace; font-size: .7rem; color: var(--ink-3); letter-spacing: .08em; }
+      .card-points .pts { font-size: 2rem; font-weight: 900; letter-spacing: -0.02em; margin-top: .9rem; line-height: 1; }
+      .card-points .pts small { font-size: 1.05rem; font-weight: 800; }
+      .card-points p { font-size: .85rem; color: var(--ink-2); margin-top: .3rem; }
+      .card-points .bar { margin-top: .9rem; }
+      .card-deposit {
+        right: 0; bottom: -2%; z-index: 4;
+        background: var(--navy); color: #e9edf4; padding: .95rem 1.15rem;
+        transform: rotate(2deg); border-radius: 16px;
+        font-size: .85rem; line-height: 1.45; max-width: 230px;
+      }
+      .card-deposit b { color: var(--gold); display: block; font-size: 1.02rem; }
+      .bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+      .bar i { display: block; height: 100%; background: var(--navy); border-radius: 99px; transition: width .8s ease; }
+            .hero-art .sample-badge { position: absolute; left: 0; top: 2%; z-index: 5; transform: rotate(-3deg); }
+
+      /* ---------- trust strip ---------- */
+      .trust { border-block: 1px solid var(--line); background: var(--surface); }
+      .trust .wrap { display: flex; flex-wrap: wrap; gap: 1rem 2.6rem; padding-block: 1.15rem; align-items: center; }
+      .trust div { display: flex; gap: .55rem; align-items: center; font-size: .93rem; font-weight: 700; }
+      .trust svg { color: var(--gold-deep); flex: none; }
+
+      /* ---------- problem tiles ---------- */
+      .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+      .tile {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 1.4rem 1.5rem; display: grid; gap: .8rem; align-content: start;
+      }
+      .tile .ic {
+        width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+        background: var(--gold-soft); color: var(--gold-deep);
+      }
+      .tile p { font-weight: 700; font-size: 1.02rem; line-height: 1.35; }
+      .tile span { font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600; color: var(--ink-3); letter-spacing: .06em; }
+
+      /* ---------- thesis ---------- */
+      .thesis { background: var(--navy); color: #e9edf4; }
+            .thesis .tag { color: var(--gold); }
+      .thesis h2 { color: #fff; max-width: 26ch; }
+      .thesis h2 .hl { color: var(--gold); }
+      .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: .8rem; margin-top: 2.4rem; }
+      .flow .node {
+        flex: 1 1 160px; border: 1px solid rgba(255,255,255,.22); border-radius: 16px; padding: 1.2rem 1.3rem;
+        background: rgba(255,255,255,.05); display: grid; gap: .3rem; align-content: start;
+      }
+      .flow .node .n { font-family: "IBM Plex Mono", monospace; font-size: .7rem; color: var(--gold); letter-spacing: .08em; }
+      .flow .node b { font-size: 1.18rem; font-weight: 800; color: #fff; line-height: 1.2; }
+      .flow .node.gold { background: var(--gold); border-color: var(--gold); }
+      .flow .node.gold b { color: #23180a; }
+      .flow .node.gold .n { color: rgba(35,24,10,.65); }
+      .flow .arr { align-self: center; color: var(--gold); flex: none; }
+
+      /* ---------- journey ---------- */
+      .journey-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; }
+      .jstep {
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 14px; padding: .95rem 1rem; text-align: left; cursor: pointer; color: inherit; font: inherit;
+        transition: border-color .15s, background .15s;
+      }
+      .jstep:hover { border-color: var(--ink-3); }
+      .jstep.active { background: var(--navy); border-color: var(--navy); color: #f4eedd; }
+            .jstep .n { font-family: "IBM Plex Mono", monospace; font-size: .7rem; opacity: .7; display: flex; justify-content: space-between; align-items: center; }
+      .jstep .t { display: block; font-weight: 800; margin-top: .4rem; font-size: .95rem; line-height: 1.25; }
+      .journey-detail {
+        margin-top: .9rem; background: var(--gold-soft); border: 1px solid var(--line);
+        border-radius: 14px; padding: 1.05rem 1.25rem; display: flex; gap: .9rem; align-items: center;
+      }
+      .journey-detail svg { flex: none; color: var(--gold-deep); }
+      .journey-detail p { font-size: 1rem; font-weight: 600; }
+
+      /* ---------- demo teaser ---------- */
+      .teaser {
+        background: var(--navy); border-radius: 26px; overflow: hidden;
+        display: grid; grid-template-columns: 1fr 1.1fr; color: #e9edf4;
+      }
+            .teaser-copy { padding: clamp(1.8rem, 4vw, 3rem); display: grid; gap: 1rem; align-content: center; }
+      .teaser-copy .tag { color: var(--gold); }
+      .teaser-copy h2 { color: #fff; }
+      .teaser-copy p { color: #b9c4d8; max-width: 38ch; }
+      .teaser-visual { position: relative; min-height: 300px; background: radial-gradient(circle at 78% 18%, rgba(217,154,34,.5), transparent 55%), radial-gradient(circle at 15% 90%, rgba(217,154,34,.25), transparent 50%); }
+      .mini-ws {
+        position: absolute; inset: 12% 8% auto; background: var(--surface); color: var(--ink);
+        border-radius: 16px; box-shadow: var(--shadow); padding: 1rem 1.1rem; transform: rotate(-2deg);
+        display: grid; gap: .7rem;
+      }
+      .mini-ws .row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+      .mini-ws .k { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); }
+      .mini-ws .v { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
+      .mini-chip {
+        position: absolute; right: 6%; bottom: 10%; background: var(--gold); color: #23180a;
+        border-radius: 14px; padding: .8rem 1rem; transform: rotate(3deg); box-shadow: var(--shadow);
+        font-weight: 800; font-size: .92rem; line-height: 1.3; max-width: 210px;
+      }
+
+      /* ---------- calculator ---------- */
+      .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+      .calc-form { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 1.7rem; box-shadow: var(--shadow); }
+      .field { display: grid; gap: .45rem; margin-bottom: 1.25rem; }
+      .field:last-child { margin-bottom: 0; }
+      .field label { font-weight: 700; font-size: .92rem; display: flex; justify-content: space-between; align-items: baseline; }
+      .field label output { font-family: "IBM Plex Mono", monospace; color: var(--gold-deep); font-weight: 600; }
+      .field input[type="number"] {
+        font: inherit; padding: .75rem .9rem; border-radius: 12px; border: 1px solid var(--line);
+        background: var(--bg); color: var(--ink); width: 100%;
+      }
+      .field input[type="range"] { width: 100%; accent-color: var(--navy); }
+            .field .hint { font-size: .8rem; color: var(--ink-3); }
+      .calc-out { display: grid; gap: 1rem; }
+      .out-card { border-radius: var(--radius); padding: 1.4rem 1.5rem; border: 1px solid var(--line); background: var(--surface); }
+      .out-card.navy { background: var(--navy); color: #e9edf4; border-color: var(--navy); }
+      .out-card .k { font-size: .85rem; font-weight: 700; opacity: .85; }
+      .out-card .v { font-family: "IBM Plex Mono", monospace; font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 600; margin: .25rem 0; color: var(--gold); }
+      .out-card p { font-size: .9rem; color: var(--ink-2); }
+      .out-card.navy p { color: #b9c4d8; }
+      .out-rows { display: grid; gap: .5rem; margin-top: .7rem; font-size: .92rem; }
+      .out-rows div { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px dashed var(--line); padding-top: .5rem; }
+      .out-rows b { font-family: "IBM Plex Mono", monospace; font-weight: 600; white-space: nowrap; }
+      .calc-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+
+      /* ---------- partners ---------- */
+      .partners { background: var(--navy); color: #e9edf4; }
+            .partners h2 { color: #fff; }
+      .partners .tag { color: var(--gold); }
+      .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+      .pcard { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16); border-radius: var(--radius); padding: 1.5rem; display: grid; gap: .6rem; align-content: start; }
+      .pcard .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(217,154,34,.18); color: var(--gold); }
+      .pcard h3 { color: #fff; }
+      .pcard p { color: #c3cede; font-size: .93rem; }
+      .pcard ul { margin: .2rem 0 0; padding: 0; list-style: none; display: grid; gap: .4rem; font-size: .88rem; color: #dbe2ee; }
+      .pcard ul li { display: flex; gap: .5rem; align-items: flex-start; }
+      .pcard ul svg { color: var(--gold); flex: none; margin-top: .15rem; }
+      .partner-cta { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: center; justify-content: space-between; }
+      .partner-cta h3 { color: #fff; font-size: 1.3rem; }
+
+      /* ---------- faq ---------- */
+      .faq { max-width: 780px; }
+      .faq-item { border-bottom: 1px solid var(--line); }
+      .faq-q {
+        width: 100%; background: none; border: 0; font: inherit; cursor: pointer; text-align: left;
+        display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+        padding: 1.2rem 0; font-weight: 700; font-size: 1.03rem; color: var(--ink);
+      }
+      .faq-q .chev { transition: transform .2s; color: var(--gold-deep); flex: none; }
+      .faq-item.open .faq-q .chev { transform: rotate(180deg); }
+      .faq-a { display: none; padding: 0 0 1.3rem; color: var(--ink-2); max-width: 62ch; font-size: .96rem; }
+      .faq-item.open .faq-a { display: block; }
+
+      /* ---------- waitlist / footer ---------- */
+      form.waitlist { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 1.7rem; box-shadow: var(--shadow); display: grid; gap: 1rem; }
+      form.waitlist .field { margin-bottom: 0; }
+      form.waitlist input[type="email"], form.waitlist select {
+        font: inherit; padding: .75rem .9rem; border-radius: 12px; border: 1px solid var(--line);
+        background: var(--bg); color: var(--ink); width: 100%;
+      }
+      .consent { display: flex; gap: .65rem; align-items: flex-start; font-size: .9rem; color: var(--ink-2); cursor: pointer; }
+      .consent input { width: 18px; height: 18px; margin-top: .15rem; accent-color: var(--navy); flex: none; cursor: pointer; }
+            .form-err { color: #b3402a; font-size: .88rem; font-weight: 600; display: none; }
+      .form-err.show { display: block; }
+            .wl-success { display: none; background: var(--surface); border: 1px solid var(--gold); border-radius: 24px; padding: 1.7rem; box-shadow: var(--shadow); }
+      .wl-success.show { display: grid; gap: 1rem; }
+      .wl-success dl { margin: 0; display: grid; gap: .5rem; font-size: .95rem; }
+      .wl-success dl div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--line); padding-bottom: .5rem; }
+      .wl-success dt { color: var(--ink-2); }
+      .wl-success dd { margin: 0; font-weight: 700; text-align: right; }
+      footer.site { padding: 2.6rem 0 2.8rem; }
+      .foot-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; align-items: start; }
+      .foot-grid h4 { margin: 0 0 .8rem; font-family: "IBM Plex Mono", monospace; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; }
+      .foot-links { display: grid; gap: .55rem; }
+      .foot-links a, .foot-links button { text-decoration: none; font-weight: 600; font-size: .92rem; color: var(--ink-2); background: none; border: 0; font-family: inherit; text-align: left; padding: 0; cursor: pointer; }
+      .foot-links a:hover, .foot-links button:hover { color: var(--ink); }
+      .foot-tag { color: var(--ink-2); font-size: .92rem; margin-top: .6rem; max-width: 30ch; }
+      .foot-base { margin-top: 2.2rem; padding-top: 1.4rem; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; font-size: .85rem; color: var(--ink-3); }
+      .foot-base .mono { letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; font-weight: 600; }
+
+      /* ---------- gold band + early access ---------- */
+      .gold-band {
+        background: linear-gradient(118deg, var(--gold) 0%, color-mix(in srgb, var(--gold) 84%, #b57a10) 58%, color-mix(in srgb, var(--gold) 70%, #8a5a00) 100%);
+        color: #23180a; padding: clamp(2.6rem, 5vw, 3.6rem) 0;
+      }
+      .gold-band .wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(1.6rem, 4vw, 3.2rem); align-items: center; }
+      .band-tag {
+        font-family: "IBM Plex Mono", monospace; font-size: .72rem; font-weight: 600;
+        letter-spacing: .12em; text-transform: uppercase; color: rgba(35,24,10,.66);
+        display: inline-flex; align-items: center; gap: .55rem;
+      }
+      .band-tag::before { content: ""; width: 22px; height: 2px; background: #23180a; opacity: .55; }
+      .gold-band h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); max-width: 16ch; margin-top: .7rem; }
+      .band-copy p { margin-top: .8rem; font-weight: 600; color: rgba(35,24,10,.75); }
+      form.waitlist.band-form { grid-template-columns: 180px minmax(0, 1fr) auto; align-items: end; gap: .85rem 1rem; }
+      form.waitlist.band-form .consent, form.waitlist.band-form .form-err { grid-column: 1 / -1; }
+      @media (max-width: 980px) { .gold-band .wrap { grid-template-columns: 1fr; } }
+      @media (max-width: 640px) {
+        form.waitlist.band-form { grid-template-columns: 1fr; }
+        form.waitlist.band-form .btn { justify-content: center; }
+      }
+
+      /* ---------- sleek finish (landing) ---------- */
+      .btn { box-shadow: 0 12px 26px -16px rgba(11, 27, 51, .5); }
+      .btn:hover { transform: translateY(-1px); }
+      .btn-ghost { box-shadow: none; }
+      .hero { background: radial-gradient(660px 430px at 84% 4%, rgba(217, 154, 34, .17), transparent 62%); }
+      .tile, .pcard { transition: transform .3s var(--ease), border-color .3s, box-shadow .3s var(--ease); }
+      .tile:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); }
+      .pcard:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -20px rgba(0, 0, 0, .5); border-color: rgba(217, 154, 34, .55); }
+      .jstep { transition: transform .25s var(--ease), border-color .15s, background .15s, color .15s; }
+      .jstep:hover { transform: translateY(-2px); }
+      .journey-detail { background: linear-gradient(120deg, var(--gold-soft), color-mix(in srgb, var(--gold-soft) 50%, var(--surface))); }
+      .flow .node.gold { box-shadow: 0 18px 36px -16px rgba(217, 154, 34, .55); }
+      .teaser { box-shadow: var(--shadow); }
+      .field input[type="range"] { cursor: pointer; }
+      @keyframes drift { 0%, 100% { margin-top: 0; } 50% { margin-top: -10px; } }
+      .card-coach { animation: drift 7s ease-in-out infinite; }
+      .card-points { animation: drift 8.5s ease-in-out 1.4s infinite; }
+      @media (prefers-reduced-motion: reduce) {
+        .card-coach, .card-points { animation: none; }
+        .btn:hover, .tile:hover, .pcard:hover, .jstep:hover { transform: none; }
+      }
+
+      /* ================================================================
+         DEMO VIEW — standalone interactive experience (product-faithful)
+         ================================================================ */
+      .demo-view {
+        display: none; min-height: 100vh; background: var(--bg);
+        --teal: #146c5c; --teal-ink: #0d4f43; --mint: #e2f0e9; --mint-line: #c2ded1;
+      }
+            .demo-view.open { display: block; }
+      .demo-view [hidden] { display: none !important; }
+      body.demo-open { overflow-x: hidden; }
+      .demo-layout { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+
+      /* sidebar */
+      .demo-side {
+        background: var(--navy); color: #dbe2ee; padding: 1.5rem 1.15rem 1.3rem;
+        display: flex; flex-direction: column; gap: 1.5rem;
+        position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      }
+            .demo-side .wordmark { color: #fff; padding-inline: .35rem; }
+      .demo-side .wordmark .shell { color: var(--gold); }
+      .side-eyebrow {
+        font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600;
+        letter-spacing: .15em; text-transform: uppercase; color: #8fa0bd; padding-inline: .35rem; margin-bottom: .6rem;
+      }
+      .side-nav { display: grid; gap: .25rem; }
+      .side-nav button {
+        font: inherit; font-weight: 600; font-size: .95rem; text-align: left; cursor: pointer;
+        background: none; border: 0; border-radius: 12px; padding: .68rem .8rem; color: #c3cede;
+        display: flex; align-items: center; gap: .65rem; width: 100%;
+      }
+      .side-nav button svg { flex: none; opacity: .8; }
+      .side-nav button:hover { background: rgba(255,255,255,.07); color: #fff; }
+      .side-nav button.active { background: rgba(255,255,255,.13); color: var(--gold); }
+      .side-nav button.active svg { opacity: 1; }
+      .session-card {
+        margin-top: auto; border: 1px solid rgba(217,154,34,.5); background: rgba(255,255,255,.05);
+        border-radius: 14px; padding: 1rem 1.05rem; font-size: .85rem; color: #c3cede; line-height: 1.5;
+      }
+      .session-card .sc-tag {
+        font-family: "IBM Plex Mono", monospace; font-size: .66rem; font-weight: 600; letter-spacing: .13em;
+        color: var(--gold); display: flex; align-items: center; gap: .45rem; margin-bottom: .5rem;
+      }
+      .end-demo {
+        display: inline-flex; align-items: center; gap: .55rem; font: inherit; font-weight: 700; font-size: .93rem;
+        background: none; border: 0; color: #fff; cursor: pointer; padding: .45rem .35rem; align-self: flex-start;
+      }
+      .end-demo:hover { color: var(--gold); }
+
+      /* main column + topbar */
+      .demo-main { min-width: 0; display: flex; flex-direction: column; }
+      .demo-topbar {
+        position: sticky; top: 0; z-index: 40;
+        background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+        padding: .8rem clamp(1.1rem, 3.5vw, 2.6rem);
+        display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      }
+      .crumb { font-size: .93rem; color: var(--ink-3); display: flex; gap: .5rem; align-items: center; }
+      .crumb b { color: var(--ink); font-weight: 700; }
+      .top-actions { margin-left: auto; display: flex; align-items: center; gap: .85rem; flex-wrap: wrap; position: relative; }
+      .demo-mode-chip {
+        font-family: "IBM Plex Mono", monospace; font-size: .66rem; font-weight: 600; letter-spacing: .09em;
+        border: 1.5px solid var(--teal); color: var(--teal); border-radius: 8px; padding: .32rem .6rem; white-space: nowrap;
+      }
+      .bell-btn { position: relative; background: none; border: 0; cursor: pointer; color: var(--ink-2); padding: .35rem; display: grid; place-items: center; }
+      .bell-btn:hover { color: var(--ink); }
+      .bell-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 50%; background: #e06428; }
+      .bell-pop {
+        display: none; position: absolute; top: calc(100% + .6rem); right: 0; width: 260px; z-index: 45;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow);
+        padding: 1rem 1.1rem; font-size: .88rem; color: var(--ink-2);
+      }
+      .bell-pop.open { display: block; }
+      .bell-pop b { color: var(--ink); display: block; margin-bottom: .25rem; }
+      .user-chip { display: flex; gap: .55rem; align-items: center; font-weight: 700; font-size: .95rem; }
+      .user-chip .avatar {
+        width: 38px; height: 38px; border-radius: 50%; background: var(--mint); color: var(--teal-ink);
+        border: 1px solid var(--mint-line); display: grid; place-items: center; font-weight: 800; font-size: .82rem; flex: none;
+      }
+      .demo-content { padding: clamp(1.4rem, 3.5vw, 2.6rem); width: 100%; max-width: 1120px; margin-inline: auto; }
+      .demo-panel { display: none; }
+      .demo-panel.active { display: grid; gap: 1.2rem; align-content: start; }
+      .d-eyebrow {
+        font-family: "IBM Plex Mono", monospace; font-size: .76rem; font-weight: 600;
+        letter-spacing: .15em; text-transform: uppercase; color: var(--teal);
+      }
+      .demo-panel h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.05; }
+      .p-head { display: flex; justify-content: space-between; gap: 1.2rem; align-items: flex-end; flex-wrap: wrap; }
+      .p-head .stack { display: grid; gap: .7rem; }
+      .p-sub { color: var(--ink-2); font-size: 1rem; max-width: 58ch; }
+      .d-card { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 1.3rem 1.4rem; }
+      .d-card h3 { margin-bottom: .7rem; display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+      .d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+      .d-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; }
+      .d-stat { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.05rem 1.15rem; }
+      .d-stat .k { font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--ink-3); }
+      .d-stat .v { font-weight: 800; font-size: 1.55rem; margin-top: .35rem; letter-spacing: -0.01em; }
+      .d-stat .sub { font-size: .83rem; color: var(--ink-3); display: block; margin-top: .2rem; line-height: 1.4; }
+      .bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+      .bar i { display: block; height: 100%; background: var(--navy); border-radius: 99px; transition: width .8s ease; }
+            .demo-note { font-size: .8rem; color: var(--ink-3); }
+      .activity { list-style: none; margin: 0; padding: 0; display: grid; }
+      .activity li { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px dashed var(--line); font-size: .92rem; }
+      .activity li:last-child { border-bottom: 0; }
+      .activity .when { font-family: "IBM Plex Mono", monospace; font-size: .75rem; color: var(--ink-3); white-space: nowrap; }
+      .kv { display: grid; gap: .5rem; font-size: .94rem; }
+      .kv div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px dashed var(--line); padding-bottom: .5rem; }
+      .kv div:last-child { border-bottom: 0; padding-bottom: 0; }
+      .kv dt { color: var(--ink-2); }
+      .kv dd { margin: 0; font-weight: 700; text-align: right; }
+
+      /* overview */
+      .ov-grid { display: grid; grid-template-columns: 1.9fr 1fr; gap: 1.1rem; }
+      .ov-move { background: var(--navy); color: #e9edf4; border-radius: 24px; padding: 1.7rem 1.8rem; display: grid; gap: 1.05rem; align-content: start; }
+            .card-eyebrow { font-family: "IBM Plex Mono", monospace; font-size: .7rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; }
+      .ov-move .card-eyebrow { color: var(--gold); }
+      .ov-move .big { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-size: clamp(1.45rem, 2.6vw, 1.95rem); font-weight: 800; color: #fff; line-height: 1.15; }
+      .ov-move .big .pct { color: var(--gold); font-weight: 700; }
+      .ov-move .bar { background: rgba(255,255,255,.18); height: 10px; }
+      .ov-move .bar i { background: var(--gold); }
+      .ov-move .row { display: flex; justify-content: space-between; gap: 1rem; color: #b9c4d8; font-size: .9rem; font-weight: 600; flex-wrap: wrap; }
+      .gold-link {
+        color: var(--gold); font-weight: 800; background: none; border: 0; cursor: pointer; font: inherit;
+        padding: 0; display: inline-flex; gap: .45rem; align-items: center; justify-self: start;
+      }
+      .gold-link:hover { text-decoration: underline; }
+      .ov-next { background: var(--gold); color: #23180a; border-radius: 24px; padding: 1.7rem 1.8rem; display: grid; gap: .85rem; align-content: start; }
+      .ov-next .card-eyebrow { color: rgba(35,24,10,.6); }
+      .ov-next .big { font-size: clamp(1.5rem, 2.4vw, 1.9rem); font-weight: 900; line-height: 1.12; color: var(--navy); }
+            .ov-next p { color: rgba(35,24,10,.78); font-size: .95rem; }
+      .ov-next .btn { justify-self: start; }
+
+      /* move plan tasks */
+      .task-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+      .task-list li { display: flex; gap: .7rem; align-items: flex-start; padding: .55rem .6rem; border-radius: 10px; }
+      .task-list li:hover { background: var(--surface-2); }
+      .task-list button.task {
+        width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--ink-3); background: none; cursor: pointer;
+        flex: none; margin-top: .05rem; display: grid; place-items: center; color: transparent; padding: 0;
+      }
+      .task-list li.done button.task { background: var(--gold); border-color: var(--gold); color: #23180a; }
+      .task-list li.done .task-t { color: var(--ink-3); text-decoration: line-through; }
+      .task-t { font-weight: 600; font-size: .95rem; display: block; }
+      .task-d { font-size: .83rem; color: var(--ink-3); display: block; }
+
+      /* lease intelligence */
+      .info-banner {
+        display: flex; gap: 1rem; align-items: flex-start;
+        background: var(--mint); border: 1px solid var(--mint-line); border-radius: 18px; padding: 1.2rem 1.3rem;
+      }
+      .info-banner .ic {
+        width: 42px; height: 42px; border-radius: 50%; flex: none; display: grid; place-items: center;
+        background: var(--surface); color: var(--teal); border: 1px solid var(--mint-line);
+      }
+      .info-banner b { color: var(--teal-ink); font-size: 1.02rem; }
+      .info-banner p { color: var(--ink-2); font-size: .93rem; margin-top: .25rem; max-width: 62ch; }
+      .info-banner .demo-mode-chip { margin-left: auto; flex: none; background: var(--surface); }
+      .review-card { border: 1.5px solid var(--gold); border-radius: 20px; background: var(--surface); padding: 1.5rem; display: grid; gap: 1.2rem; }
+      .review-head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; flex-wrap: wrap; }
+      .review-head h3 { font-size: 1.25rem; margin-top: .45rem; }
+      .review-head p { color: var(--ink-2); font-size: .93rem; margin-top: .35rem; max-width: 56ch; }
+      .warn-eyebrow { font-family: "IBM Plex Mono", monospace; font-size: .7rem; font-weight: 600; letter-spacing: .14em; color: var(--gold-deep); text-transform: uppercase; }
+      .facts-chip {
+        font-family: "IBM Plex Mono", monospace; font-size: .7rem; font-weight: 600; white-space: nowrap;
+        background: var(--gold-soft); color: var(--gold-deep); border: 1px solid var(--line);
+        border-radius: 999px; padding: .35rem .75rem;
+      }
+      .add-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+      .add-chip {
+        font: inherit; font-size: .86rem; font-weight: 700; cursor: pointer;
+        border: 1.5px solid var(--gold-deep); color: var(--gold-deep); background: var(--surface);
+        border-radius: 999px; padding: .45rem .9rem;
+      }
+      .add-chip:hover { background: var(--gold-soft); }
+      .add-chip.filled { display: none; }
+      .file-chip {
+        display: inline-flex; gap: .6rem; align-items: center; max-width: 100%;
+        border: 1px solid var(--line); border-radius: 12px; padding: .65rem .95rem;
+        font-weight: 600; font-size: .9rem; background: var(--surface); color: var(--ink);
+      }
+      .file-chip svg { color: var(--teal); flex: none; }
+      .file-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .key-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+      .kf .k { font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); }
+      .kf .v { font-size: clamp(1.5rem, 2.6vw, 1.9rem); font-weight: 800; margin: .3rem 0 .45rem; letter-spacing: -0.01em; }
+      .cite {
+        font-family: "IBM Plex Mono", monospace; font-size: .64rem; font-weight: 600; letter-spacing: .05em;
+        text-transform: uppercase; color: var(--teal); display: inline-flex; gap: .35rem; align-items: center;
+      }
+      .cite::before { content: ""; width: 13px; height: 13px; flex: none; background: currentColor;
+        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
+      }
+      .expl-list { display: grid; gap: .9rem; }
+      .expl-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.3rem; display: grid; gap: .5rem; }
+      .expl-card h4 { margin: 0; font-size: 1.05rem; font-weight: 800; }
+      .expl-card p { color: var(--ink-2); font-size: .94rem; }
+      .quote-box {
+        margin: 0; background: var(--mint); border-left: 3px solid var(--teal); border-radius: 8px;
+        padding: .6rem .85rem; font-size: .9rem; color: var(--ink);
+      }
+      .field-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3rem 1.4rem; }
+      .fld { display: grid; gap: .45rem; align-content: start; }
+      .fld label { font-weight: 700; font-size: .92rem; color: var(--teal-ink); }
+      .fld input {
+        font: inherit; width: 100%; padding: .8rem .9rem; border-radius: 12px;
+        border: 1.5px solid var(--line); background: var(--surface); color: var(--ink);
+      }
+      .fld input::placeholder { color: var(--ink-3); }
+      .fld.filled input { border-color: var(--teal); }
+      .use-extracted {
+        font: inherit; font-size: .8rem; font-weight: 700; color: var(--teal); background: none; border: 0;
+        cursor: pointer; padding: 0; justify-self: start; text-align: left;
+      }
+      .use-extracted:hover { text-decoration: underline; }
+      .btn-teal { background: var(--teal); color: #fff; }
+      .btn-teal:hover { filter: brightness(1.07); }
+            .btn-danger-text {
+        font: inherit; font-weight: 700; color: #b3402a; background: none; border: 0; cursor: pointer;
+        display: inline-flex; gap: .45rem; align-items: center; padding: .5rem .2rem;
+      }
+            .lease-actions { display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; }
+      .confirmed-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.1rem; }
+      .confirmed-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.6rem; display: grid; gap: 1rem; align-content: start; }
+      .confirmed-card .addr { font-size: clamp(1.55rem, 3vw, 2.15rem); font-weight: 800; line-height: 1.18; letter-spacing: -0.015em; }
+      .confirmed-card .landlord { color: var(--ink-2); font-size: .98rem; }
+      .reviewed-chip {
+        display: inline-flex; gap: .4rem; align-items: center; background: var(--mint); color: var(--teal-ink);
+        border: 1px solid var(--mint-line); font-weight: 700; font-size: .85rem; border-radius: 999px; padding: .4rem .85rem;
+      }
+      .attention-card { background: var(--gold); color: #23180a; border-radius: 20px; padding: 1.6rem; display: grid; gap: .9rem; align-content: start; }
+      .attention-card .card-eyebrow { color: rgba(35,24,10,.6); }
+      .attention-card .big { font-size: clamp(1.5rem, 2.6vw, 1.95rem); font-weight: 900; line-height: 1.15; color: var(--navy); }
+            .attention-card p { color: rgba(35,24,10,.8); font-size: .94rem; }
+      .view-pdf {
+        font: inherit; font-size: .82rem; font-weight: 700; cursor: pointer;
+        background: rgba(255,255,255,.55); border: 1px solid rgba(35,24,10,.35); color: #23180a;
+        border-radius: 999px; padding: .38rem .85rem; display: inline-flex; gap: .45rem; align-items: center;
+      }
+      .demo-alert {
+        display: none; background: var(--gold-soft); border: 1px solid var(--gold); color: var(--ink);
+        border-radius: 12px; padding: .8rem 1rem; font-size: .9rem; font-weight: 600;
+      }
+      .demo-alert.show { display: block; }
+
+      /* deposit */
+      .dep-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; align-items: start; }
+      .dep-card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 1.7rem; display: grid; gap: 1rem; align-content: start; }
+      .partner-name {
+        font-family: "IBM Plex Mono", monospace; font-size: .76rem; font-weight: 600; letter-spacing: .13em;
+        color: var(--teal); display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      }
+      .best-chip {
+        background: var(--mint); color: var(--teal-ink); border: 1px solid var(--mint-line);
+        font-size: .66rem; letter-spacing: .09em; border-radius: 999px; padding: .32rem .7rem; font-weight: 600; white-space: nowrap;
+      }
+      .dep-card h3 { font-size: clamp(1.45rem, 2.4vw, 1.8rem); font-weight: 800; line-height: 1.15; }
+      .dep-card .desc { color: var(--ink-2); font-size: .96rem; }
+      .dep-card .hr { border-top: 1px solid var(--line); }
+      .fee-label { font-family: "IBM Plex Mono", monospace; font-size: .68rem; font-weight: 600; letter-spacing: .1em; color: var(--ink-3); text-transform: uppercase; }
+      .fee-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .45rem; }
+      .fee-big { font-size: 1.4rem; font-weight: 800; }
+      .dep-foot { font-size: .85rem; color: var(--ink-3); line-height: 1.5; }
+      .status-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: .8rem; }
+      .status-steps li { display: flex; gap: .7rem; align-items: flex-start; font-size: .93rem; }
+      .status-steps .dot {
+        width: 22px; height: 22px; border-radius: 50%; flex: none; display: grid; place-items: center;
+        border: 2px solid var(--ink-3); color: transparent; margin-top: .05rem;
+      }
+      .status-steps li.done .dot { background: var(--gold); border-color: var(--gold); color: #23180a; }
+      .status-steps li.current .dot { border-color: var(--teal); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 9px var(--teal); }
+      .status-steps .st-t { font-weight: 700; display: block; }
+      .status-steps .st-d { color: var(--ink-3); font-size: .85rem; display: block; }
+      .status-steps li.todo { color: var(--ink-3); }
+      .app-fields { display: grid; gap: .9rem; }
+      .app-fields .fld label { color: var(--ink); }
+      .done-box { display: grid; gap: .6rem; justify-items: start; }
+      .done-box .tick {
+        width: 46px; height: 46px; border-radius: 50%; background: var(--mint); border: 1px solid var(--mint-line);
+        color: var(--teal); display: grid; place-items: center;
+      }
+      .done-box h4 { margin: 0; font-size: 1.1rem; font-weight: 800; }
+      .done-box p { color: var(--ink-2); font-size: .92rem; }
+
+      /* rewards + rent */
+      .points-pill { display: inline-flex; gap: .4rem; align-items: center; background: var(--gold-soft); border: 1px solid var(--line); color: var(--gold-deep); font-weight: 700; font-size: .88rem; border-radius: 999px; padding: .35rem .8rem; }
+      .offer { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .8rem 0; border-bottom: 1px dashed var(--line); font-size: .93rem; }
+      .offer:last-child { border-bottom: 0; }
+      .offer small { display: block; color: var(--ink-3); }
+      .points-big { font-size: clamp(2.2rem, 4.5vw, 3rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+      .points-big small { font-size: 1.1rem; font-weight: 800; color: var(--ink-3); }
+
+      /* support chat + landa chat shared */
+      .chat { display: grid; gap: .7rem; }
+      .chat-log { display: grid; gap: .6rem; max-height: 320px; overflow-y: auto; padding-right: .2rem; align-content: start; }
+      .msg { border-radius: 14px; padding: .7rem .95rem; font-size: .93rem; max-width: 88%; line-height: 1.5; }
+      .msg.landa { background: var(--gold-soft); border: 1px solid var(--line); justify-self: start; }
+      .msg.you { background: var(--navy); color: #f4eedd; justify-self: end; }
+            .msg .who { font-family: "IBM Plex Mono", monospace; font-size: .64rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; display: block; margin-bottom: .25rem; opacity: .75; }
+      .chat-form { display: flex; gap: .6rem; }
+      .chat-form input {
+        flex: 1; font: inherit; padding: .7rem .9rem; border-radius: 12px; border: 1px solid var(--line);
+        background: var(--bg); color: var(--ink); min-width: 0;
+      }
+      .chip-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+      .qchip {
+        font: inherit; font-size: .82rem; font-weight: 600; cursor: pointer;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+        border-radius: 999px; padding: .4rem .8rem; text-align: left;
+      }
+      .qchip:hover { border-color: var(--gold-deep); color: var(--ink); }
+
+      /* settings */
+      .set-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; padding: .85rem 0; border-bottom: 1px dashed var(--line); }
+      .set-row:last-child { border-bottom: 0; }
+      .set-row .lab b { display: block; font-size: .95rem; }
+      .set-row .lab span { font-size: .83rem; color: var(--ink-3); }
+      .set-input {
+        font: inherit; padding: .6rem .8rem; border: 1px solid var(--line); border-radius: 10px;
+        background: var(--bg); color: var(--ink); width: min(300px, 100%);
+      }
+      .toggle {
+        width: 48px; height: 27px; border-radius: 99px; background: var(--line); border: 0; position: relative;
+        cursor: pointer; flex: none; padding: 0;
+      }
+      .toggle::after {
+        content: ""; position: absolute; top: 3px; left: 3px; width: 21px; height: 21px; border-radius: 50%;
+        background: var(--surface); box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: left .15s;
+      }
+      .toggle[aria-pressed="true"] { background: var(--teal); }
+      .toggle[aria-pressed="true"]::after { left: 24px; }
+
+      /* floating: demo guide + ask landa */
+      .fab {
+        position: fixed; right: 1.2rem; z-index: 70; border: 0; cursor: pointer; box-shadow: var(--shadow);
+        border-radius: 999px; font: inherit; font-weight: 700; font-size: .93rem;
+        display: inline-flex; gap: .55rem; align-items: center; padding: .85rem 1.3rem;
+        background: var(--navy); color: #f4eedd;
+      }
+            .fab svg { color: var(--gold); flex: none; }
+      .guide-fab { bottom: 1.2rem; }
+      .landa-fab { bottom: 4.7rem; display: none; }
+      .landa-fab.show { display: inline-flex; }
+      .landa-fab .dot { position: absolute; top: 2px; right: 6px; width: 9px; height: 9px; border-radius: 50%; background: #e06428; }
+      .landa-fab { position: fixed; }
+      .pop {
+        position: fixed; right: 1.2rem; z-index: 71; width: min(400px, calc(100vw - 2rem));
+        background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+        display: none; overflow: hidden;
+      }
+      .pop.open { display: grid; }
+      .guide-pop { bottom: 4.9rem; padding: 1.25rem 1.35rem; gap: .4rem; }
+      .guide-pop h3 { font-size: 1.05rem; display: flex; justify-content: space-between; align-items: center; }
+      .guide-pop .pop-close { background: none; border: 0; cursor: pointer; color: var(--ink-3); padding: .2rem; display: grid; place-items: center; }
+      .guide-item {
+        display: flex; gap: .7rem; align-items: flex-start; width: 100%; text-align: left;
+        background: none; border: 0; font: inherit; cursor: pointer; padding: .45rem 0; color: var(--ink-2);
+      }
+      .guide-item .gcheck {
+        width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--ink-3); flex: none;
+        display: grid; place-items: center; color: transparent; margin-top: .05rem;
+      }
+      .guide-item.done .gcheck { background: var(--teal); border-color: var(--teal); color: #fff; }
+      .guide-item.done .gt { color: var(--ink-3); text-decoration: line-through; }
+      .guide-item .gt b { display: block; color: var(--ink); font-size: .93rem; }
+      .guide-item.done .gt b { color: var(--ink-3); }
+      .guide-item .gt span { font-size: .82rem; }
+      .landa-pop { bottom: 1.2rem; height: min(600px, calc(100dvh - 2.4rem)); grid-template-rows: auto 1fr auto; z-index: 72; }
+      .landa-head {
+        background: var(--navy); color: #fff; padding: 1rem 1.15rem; display: flex; gap: .75rem; align-items: center;
+      }
+            .landa-head .bot {
+        width: 38px; height: 38px; border-radius: 50%; background: var(--gold); color: #23180a;
+        display: grid; place-items: center; flex: none;
+      }
+      .landa-head b { display: block; font-size: 1rem; line-height: 1.2; }
+      .landa-head span { font-size: .78rem; color: #b9c4d8; }
+      .landa-head .pop-close { margin-left: auto; background: none; border: 0; color: #fff; cursor: pointer; padding: .3rem; display: grid; place-items: center; }
+      .landa-pop .chat-log { max-height: none; padding: 1rem 1.05rem; background: var(--bg); }
+      .landa-pop .msg.landa { background: var(--mint); border-color: var(--mint-line); max-width: 92%; }
+      .landa-pop .msg blockquote {
+        margin: .55rem 0 0; background: var(--surface); border-left: 3px solid var(--teal);
+        padding: .5rem .7rem; border-radius: 6px; font-size: .87rem;
+      }
+      .src-chip {
+        display: inline-block; margin-top: .55rem; font-family: "IBM Plex Mono", monospace;
+        font-size: .62rem; font-weight: 600; letter-spacing: .06em; color: var(--teal); text-transform: uppercase;
+      }
+      .landa-foot { padding: .85rem 1.05rem 1rem; display: grid; gap: .7rem; border-top: 1px solid var(--line); background: var(--surface); }
+      .chat-disclaimer { font-size: .75rem; color: var(--ink-3); line-height: 1.45; }
+
+      /* demo responsive */
+      @media (max-width: 1020px) {
+        .d-stats { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 960px) {
+        .demo-layout { grid-template-columns: 1fr; }
+        .demo-side { position: static; height: auto; gap: 1rem; }
+        .side-nav { display: flex; flex-wrap: wrap; }
+        .side-nav button { width: auto; flex: 1 1 auto; justify-content: center; }
+        .session-card { margin-top: 0; }
+        .ov-grid, .dep-cards, .confirmed-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 700px) {
+        .field-grid, .key-facts { grid-template-columns: 1fr; }
+        .d-grid { grid-template-columns: 1fr; }
+        .chat-form { flex-direction: column; }
+        .set-row { flex-direction: column; align-items: flex-start; }
+      }
+      @media (max-width: 560px) {
+        .d-stats { grid-template-columns: 1fr; }
+        .info-banner { flex-wrap: wrap; }
+        .info-banner .demo-mode-chip { margin-left: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .toggle::after { transition: none; }
+      }
+
+      /* ---------- reveal ---------- */
+      .reveal.in { animation: rise .6s ease both; }
+      @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        .reveal.in { animation: none; }
+        .bar i { transition: none; }
+      }
+
+      /* ---------- responsive ---------- */
+      @media (max-width: 1020px) {
+        .tiles { grid-template-columns: 1fr 1fr; }
+        .journey-steps { grid-template-columns: repeat(2, 1fr); }
+        .d-stats { grid-template-columns: 1fr 1fr; }
+      }
+      @media (max-width: 860px) {
+        .nav-links, .nav-cta { display: none; }
+        .menu-btn { display: block; }
+        .hero-grid, .calc-grid, .teaser, .d-grid { grid-template-columns: 1fr; }
+        .partner-grid { grid-template-columns: 1fr; }
+        .foot-grid { grid-template-columns: 1fr 1fr; }
+        .hero-art { min-height: 430px; margin-top: .5rem; }
+        .teaser-visual { min-height: 260px; }
+        .demo-shell { grid-template-columns: 1fr; }
+        .demo-nav { position: static; display: flex; flex-wrap: wrap; }
+        .demo-nav button { flex: 1 1 auto; justify-content: center; }
+        .demo-nav .guide { flex-basis: 100%; }
+      }
+      @media (max-width: 560px) {
+        .tiles, .journey-steps, .d-stats { grid-template-columns: 1fr; }
+        .flow .arr { transform: rotate(90deg); margin-inline: auto; }
+        .flow .node { flex-basis: 100%; }
+        .hero-art { min-height: 500px; }
+        .card-coach { right: 0; width: 84%; }
+        .card-points { width: 82%; }
+        .card-deposit { bottom: -4%; }
+        .foot-grid { grid-template-columns: 1fr; }
+        .chat-form { flex-direction: column; }
+      }
+    
+      /* ---- Renter research survey ---- */
+      .survey-card{max-width:660px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(1.4rem,3.5vw,2.4rem)}
+      .survey-progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:1rem}
+      .survey-progress>div{height:100%;width:0;background:var(--gold);border-radius:99px;transition:width .4s var(--ease)}
+      .survey-step{font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink-3);margin:0 0 1.2rem}
+      .survey-q{font-size:1.25rem;font-weight:700;color:var(--ink);margin:0 0 .4rem}
+      .survey-hint{color:var(--ink-2);font-size:.95rem;margin:0 0 1.2rem}
+      .survey-opts{display:grid;gap:.6rem;margin:0 0 1rem}
+      .survey-opt{display:flex;align-items:center;gap:.7rem;border:1.5px solid var(--line);border-radius:12px;padding:.85rem 1rem;cursor:pointer;font-weight:600;color:var(--ink);background:#fff;transition:border-color .15s,background .15s}
+      .survey-opt:hover{border-color:var(--gold)}
+      .survey-opt.selected{border-color:var(--gold);background:var(--gold-soft)}
+      .survey-opt input{accent-color:var(--gold-deep);width:1.1rem;height:1.1rem;margin:0}
+      .survey-scale{display:flex;gap:.5rem;margin:0 0 .4rem}
+      .survey-scale button{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:.8rem 0;font-size:1.05rem;font-weight:700;color:var(--ink);cursor:pointer}
+      .survey-scale button.selected{border-color:var(--gold);background:var(--gold-soft)}
+      .survey-scale-labels{display:flex;justify-content:space-between;font-size:.8rem;color:var(--ink-3);margin-bottom:1rem}
+      .survey-input,.survey-textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:.85rem 1rem;font:inherit;color:var(--ink);background:#fff;box-sizing:border-box}
+      .survey-textarea{min-height:110px;resize:vertical}
+      .survey-consent{display:flex;gap:.6rem;align-items:flex-start;margin-top:1rem;font-size:.9rem;color:var(--ink-2);cursor:pointer}
+      .survey-consent input{margin-top:.2rem;accent-color:var(--gold-deep)}
+      .survey-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.4rem}
+      .survey-err{display:none;color:#b3261e;font-size:.9rem;margin:.8rem 0 0}
+      .survey-err.show{display:block}
+      .survey-success{text-align:center;padding:1rem 0}
+      .survey-success h3{font-size:1.4rem;margin:0 0 .6rem;color:var(--ink)}
+      .survey-success p{color:var(--ink-2)}
+      /* Dark theme — enabled by the header toggle (data-theme="dark"). Light is the default. */
+      html[data-theme="dark"] { color-scheme: dark; }
+      html[data-theme="dark"] { --bg: #081120;
+          --bg-2: #0a1626;
+          --surface: #101e33;
+          --surface-2: #16283f;
+          --ink: #edf1f7;
+          --ink-2: #b3bdd0;
+          --ink-3: #7e8aa3;
+          --line: #243650;
+          --navy-soft: #1b2f4c;
+          --gold: #C08A1E;
+          --gold-deep: #C08A1E;
+          --gold-soft: #2c2413;
+          --shadow: 0 18px 44px -18px rgba(0, 0, 0, .65); }
+      html[data-theme="dark"] .btn-primary { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .btn-primary:hover { background: var(--gold); filter: brightness(1.08); }
+      html[data-theme="dark"] .eyebrow { color: var(--gold); }
+      html[data-theme="dark"] .blob { opacity: .22; }
+      html[data-theme="dark"] .blob-dot { background: var(--gold); }
+      html[data-theme="dark"] .chip { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .bar i { background: var(--gold); }
+      html[data-theme="dark"] .thesis { background: var(--navy-deep); }
+      html[data-theme="dark"] .jstep.active { background: var(--gold); border-color: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .teaser { background: var(--navy-deep); border: 1px solid var(--line); }
+      html[data-theme="dark"] .field input[type="range"] { accent-color: var(--gold); }
+      html[data-theme="dark"] .partners { background: var(--navy-deep); }
+      html[data-theme="dark"] .consent input { accent-color: var(--gold); }
+      html[data-theme="dark"] .form-err { color: #f0937c; }
+      html[data-theme="dark"] .demo-view { --teal: #57c7ab; --teal-ink: #a9e6d4; --mint: #14332a; --mint-line: #24584a; }
+      html[data-theme="dark"] .demo-side { background: var(--navy-deep); }
+      html[data-theme="dark"] .bar i { background: var(--gold); }
+      html[data-theme="dark"] .ov-move { background: var(--navy-deep); border: 1px solid var(--line); }
+      html[data-theme="dark"] .ov-next .big { color: #23180a; }
+      html[data-theme="dark"] .btn-teal { color: #052e25; }
+      html[data-theme="dark"] .btn-danger-text { color: #f0937c; }
+      html[data-theme="dark"] .attention-card .big { color: #23180a; }
+      html[data-theme="dark"] .msg.you { background: var(--gold); color: #23180a; }
+      html[data-theme="dark"] .fab { border: 1px solid var(--line); }
+      html[data-theme="dark"] .landa-head { background: var(--navy-deep); }
+      html[data-theme="dark"] .card-coach { background: var(--surface); color: var(--ink); border: 1.5px solid var(--gold); }
+      html[data-theme="dark"] .card-coach b { color: var(--ink); }
+      html[data-theme="dark"] .card-coach .foot { border-top-color: var(--line); }
+    </style>
+  </head>
+  <body>
+<div class="demo-view open" id="demoView" aria-hidden="false">
+      <div class="demo-layout">
+        <aside class="demo-side">
+          <span class="wordmark">ß<span class="shell">hell</span>s</span>
+          <nav aria-label="Demo workspace">
+            <p class="side-eyebrow">Your home base</p>
+            <div class="side-nav" id="demoNav">
+              <button type="button" class="active" data-dpanel="0">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                Overview</button>
+              <button type="button" data-dpanel="1">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3.5 6 1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/></svg>
+                Move plan</button>
+              <button type="button" data-dpanel="2">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+                Lease intelligence</button>
+              <button type="button" data-dpanel="3">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                Deposit</button>
+              <button type="button" data-dpanel="4">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 12h.01M18 12h.01"/></svg>
+                Rent</button>
+              <button type="button" data-dpanel="5">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+                Rewards</button>
+              <button type="button" data-dpanel="6">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                Support</button>
+              <button type="button" data-dpanel="7">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.01a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h.01a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.01a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+                Settings</button>
+            </div>
+          </nav>
+          <div class="session-card">
+            <span class="sc-tag">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.6L19 9.2l-5.2 1.6L12 16.4l-1.8-5.6L5 9.2l5.2-1.6z"/><path d="M19 15l.9 2.6 2.6.9-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9z"/></svg>
+              DEMO SESSION</span>
+            Try every feature freely. Your changes stay in this demo and reset when you end it.
+          </div>
+          <a class="end-demo" id="endDemo" href="index.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+            End demo</a>
+        </aside>
+
+        <div class="demo-main">
+          <div class="demo-topbar">
+            <span class="crumb">Personal space
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+              <b>Berlin move</b></span>
+            <div class="top-actions">
+              <span class="demo-mode-chip">DEMO MODE</span>
+              <button class="btn btn-ghost btn-small" type="button" id="demoReset">Reset demo</button>
+              <button class="bell-btn" type="button" id="bellBtn" aria-label="Notifications" aria-expanded="false">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                <span class="bell-dot" aria-hidden="true"></span>
+              </button>
+              <div class="bell-pop" id="bellPop" role="status">
+                <b>You're all caught up</b>
+                No new notifications in this demo. Deadlines from Maya's move plan would land here.
+              </div>
+              <span class="user-chip"><span class="avatar" aria-hidden="true">MK</span>Maya Keller</span>
+            </div>
+          </div>
+
+          <div class="demo-content">
+            <!-- OVERVIEW -->
+            <section class="demo-panel active" data-dpanel-body="0" aria-label="Demo overview">
+              <div class="p-head">
+                <div class="stack">
+                  <span class="d-eyebrow">Thursday 24 September</span>
+                  <h1>Good morning, Maya</h1>
+                  <p class="p-sub">Here is the small picture of your move today.</p>
+                </div>
+                <button class="btn btn-primary" type="button" data-goto-panel="1">View move plan
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="ov-grid">
+                <div class="ov-move">
+                  <span class="card-eyebrow">Your move plan</span>
+                  <p class="big"><span>Your move is getting closer.</span><span class="pct" id="ovProgressLabel">42%</span></p>
+                  <div class="bar"><i id="ovProgressBar" style="width:42%"></i></div>
+                  <div class="row"><span>Plan started</span><span>Keep the next task moving</span></div>
+                  <button class="gold-link" type="button" data-goto-panel="1">Open your plan
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+                <div class="ov-next">
+                  <span class="card-eyebrow">Next best action</span>
+                  <p class="big">Review your lease with Landa</p>
+                  <p>Ask questions and understand the clauses worth attention.</p>
+                  <button class="btn btn-primary btn-small" type="button" data-goto-panel="2">Take a look
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="d-stats">
+                <div class="d-stat"><span class="k">Monthly rent</span><div class="v">€1,200</div><span class="sub">From your reviewed lease</span></div>
+                <div class="d-stat"><span class="k">Deposit</span><div class="v">€3,600</div><span class="sub">Status: under review</span></div>
+                <div class="d-stat"><span class="k">Rent signal</span><div class="v">Verified</div><span class="sub">Recorded by an authorized reviewer</span></div>
+                <div class="d-stat"><span class="k">Reward balance</span><div class="v" id="ovPoints">920 pts</div><span class="sub">Earned through verified actions</span></div>
+              </div>
+              <div class="d-card">
+                <h3>Recent activity</h3>
+                <ul class="activity">
+                  <li><span>Rent payment verified — July</span><span class="when">JUL 12</span></li>
+                  <li><span>+120 pts earned through rent</span><span class="when">JUL 12</span></li>
+                  <li><span>Lease summary ready — Musterstraße 12</span><span class="when">JUL 08</span></li>
+                  <li><span>Deposit routes compared — partner-backed options</span><span class="when">JUL 05</span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- MOVE PLAN -->
+            <section class="demo-panel" data-dpanel-body="1" aria-label="Demo move plan">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Move plan</span>
+                <h1>Every task, before it's urgent.</h1>
+                <p class="p-sub">Tap a task to tick it off — the progress is real, inside this demo, and your Overview card updates with it.</p>
+              </div>
+              <div class="d-card">
+                <div style="display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;font-weight:700;flex-wrap:wrap"><span>Settling into Musterstraße 12, 12345 Musterstadt</span><span class="mono" id="mpProgressLabel">42%</span></div>
+                <div class="bar" style="margin:.6rem 0 1rem"><i id="mpProgressBar" style="width:42%;background:var(--gold)"></i></div>
+                <ul class="task-list" id="taskList">
+                  <li class="done"><button class="task" type="button" aria-label="Toggle task: Lease signed and summarised"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Lease signed &amp; summarised</span><span class="task-d">Plain-language summary ready in Lease intelligence</span></span></li>
+                  <li class="done"><button class="task" type="button" aria-label="Toggle task: Deposit route chosen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Deposit route chosen</span><span class="task-d">Cash buffer kept — see the Deposit view</span></span></li>
+                  <li class="done"><button class="task" type="button" aria-label="Toggle task: Anmeldung prepared"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Anmeldung — appointment &amp; documents listed</span><span class="task-d">Registration at the Bürgeramt, with a document checklist</span></span></li>
+                  <li><button class="task" type="button" aria-label="Toggle task: Review lease with Landa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Review your lease with Landa</span><span class="task-d">Next action — ask about the clauses worth attention</span></span></li>
+                  <li><button class="task" type="button" aria-label="Toggle task: Utilities and insurance compared"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Utilities &amp; insurance — compared for you</span><span class="task-d">Electricity, internet and liability, matched to this flat</span></span></li>
+                  <li><button class="task" type="button" aria-label="Toggle task: Handover protocol scheduled"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">Handover protocol — scheduled</span><span class="task-d">Übergabeprotokoll for move-in day, photos included</span></span></li>
+                  <li><button class="task" type="button" aria-label="Toggle task: First rent payment verified"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><span><span class="task-t">First rent payment verified</span><span class="task-d">Starts your rent signal and your points</span></span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- LEASE INTELLIGENCE -->
+            <section class="demo-panel" data-dpanel-body="2" aria-label="Demo lease intelligence">
+              <div class="p-head">
+                <div class="stack">
+                  <span class="d-eyebrow">Lease intelligence</span>
+                  <h1>Know what you are signing.</h1>
+                  <p class="p-sub">Upload a lease PDF, including a scanned copy. ßhells extracts the facts, shows where they came from, and asks you to confirm them before Landa uses them.</p>
+                </div>
+                <button class="btn btn-primary" type="button" data-replace-pdf>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+                  Replace PDF</button>
+              </div>
+              <p class="demo-alert" id="replaceNote" role="status">Demo only: Maya's prepared lease stays loaded here — uploads aren't analysed in this demo.</p>
+              <div class="info-banner">
+                <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span>
+                <div>
+                  <b>Exploring with a prepared example</b>
+                  <p>Maya's lease is a prepared demonstration of AI Lease Intelligence. You can chat with Landa about it, or <strong>Upload lease PDF</strong> to analyze your own real document using live AI. Uploads are private to this session.</p>
+                </div>
+                <span class="demo-mode-chip">DEMO MODE</span>
+              </div>
+
+              <div id="leaseMain">
+                <div id="confirmedBlock" hidden>
+                  <div class="confirmed-grid">
+                    <div class="confirmed-card">
+                      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap">
+                        <span class="d-eyebrow">Confirmed lease</span>
+                        <span class="reviewed-chip">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-3.6 8-10V5l-8-3-8 3v7c0 6.4 8 10 8 10z"/><path d="m9 11.5 2 2 4-4.5"/></svg>
+                          Reviewed</span>
+                      </div>
+                      <p class="addr">Musterstraße 12, 12345 Musterstadt, 3rd floor, left-hand unit</p>
+                      <p class="landlord">Katharina Wohlgemuth</p>
+                      <span class="file-chip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                        <span>Residential_Lease_Maya_Keller_DEMO.pdf</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                      </span>
+                    </div>
+                    <div class="attention-card">
+                      <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap">
+                        <span class="card-eyebrow">Worth your attention</span>
+                        <button class="view-pdf" type="button" data-replace-pdf>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                          View PDF</button>
+                      </div>
+                      <p class="big">Key clauses to review</p>
+                      <p>No additional clauses were flagged after your review. Keep the PDF available for reference — Landa now answers from this confirmed lease.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="review-card" id="reviewBlock" style="margin-bottom:1.2rem">
+                  <div class="review-head">
+                    <div>
+                      <span class="warn-eyebrow">Review required</span>
+                      <h3>Confirm the extracted details</h3>
+                      <p>AI can make mistakes. Compare these fields with the original PDF and correct anything that is missing or wrong.</p>
+                    </div>
+                    <span class="facts-chip" id="factsChip">3 of 6 key facts found</span>
+                  </div>
+                  <div class="add-chips" id="addChips">
+                    <button class="add-chip" type="button" data-add-chip="address">Add Rental address →</button>
+                    <button class="add-chip" type="button" data-add-chip="rent">Add Monthly rent (€) →</button>
+                    <button class="add-chip" type="button" data-add-chip="deposit">Add Deposit (€) →</button>
+                  </div>
+                  <span class="file-chip">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+                    <span>Residential_Lease_Maya_Keller_DEMO.pdf</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                  </span>
+                  <div class="key-facts">
+                    <div class="kf"><span class="k">Monthly rent</span><div class="v">€1,200</div><span class="cite">Page 1 · Rent and utility costs clause</span></div>
+                    <div class="kf"><span class="k">Deposit</span><div class="v">€2,940</div><span class="cite">Page 1 · Security deposit clause</span></div>
+                    <div class="kf"><span class="k">Start date</span><div class="v">01 Oct 2026</div><span class="cite">Page 1 · Beginning and duration</span></div>
+                  </div>
+                  <div>
+                    <span class="d-eyebrow" style="font-size:.7rem">Plain-language overview</span>
+                    <p style="margin-top:.55rem;font-size:.97rem">You confirmed a monthly rent of €1200, a deposit of €2940, a start date of 2026-10-01, and a notice period of Statutory notice periods under German law (§§ 573c BGB).</p>
+                  </div>
+                  <div class="lease-actions">
+                    <button class="btn btn-ghost btn-small" type="button" data-replace-pdf>Replace PDF</button>
+                    <button class="btn-danger-text" type="button" id="deleteLease">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                      Delete lease</button>
+                  </div>
+                </div>
+
+                <div style="display:grid;gap:1.2rem">
+                  <div class="d-card">
+                    <h3>Costs and responsibilities</h3>
+                    <span class="fee-label">Cost breakdown</span>
+                    <p style="margin-top:.5rem;color:var(--ink-2);font-size:.94rem">No additional cost items were confidently extracted.</p>
+                  </div>
+
+                  <div id="explBlock">
+                    <span class="d-eyebrow" style="font-size:.7rem">AI explanation to review</span>
+                    <div class="expl-list" style="margin-top:.8rem">
+                      <article class="expl-card">
+                        <h4>Document is marked as fictional</h4>
+                        <p>The document says it is test/demo material and does not create legal obligations. Check that you have the real, signed lease.</p>
+                        <span class="cite">Page 2 · Final document notice · Open cited page</span>
+                        <blockquote class="quote-box">“It creates no legal obligation whatsoever.”</blockquote>
+                      </article>
+                      <article class="expl-card">
+                        <h4>Monthly rent and payment timing</h4>
+                        <p>The stated monthly warm rent is €1,200.00 and is due in advance by the third business day of each month.</p>
+                        <span class="cite">Page 1 · Rent and utility costs clause · Open cited page</span>
+                        <blockquote class="quote-box">“Total monthly rent (warm rent) €1,200.00”</blockquote>
+                      </article>
+                      <article class="expl-card">
+                        <h4>Indefinite lease term</h4>
+                        <p>There is no stated fixed end date. The document refers to statutory notice periods rather than giving a specific number of days or months.</p>
+                        <span class="cite">Page 1 · Lease term clause · Open cited page</span>
+                        <blockquote class="quote-box">“runs for an indefinite period.”</blockquote>
+                      </article>
+                      <article class="expl-card">
+                        <h4>Deposit instalments</h4>
+                        <p>The stated €2,940.00 deposit is to be paid in three equal monthly instalments starting when the tenancy begins.</p>
+                        <span class="cite">Page 1 · Security deposit clause · Open cited page</span>
+                        <blockquote class="quote-box">“payable in three equal monthly instalments from the start of the tenancy”</blockquote>
+                      </article>
+                      <article class="expl-card">
+                        <h4>Annual utility settlement</h4>
+                        <p>Operating and heating costs are advances and are settled once a year using actual costs. The final amount may differ from the monthly advances.</p>
+                        <span class="cite">Page 2 · Utility cost statement clause · Open cited page</span>
+                        <blockquote class="quote-box">“Operating and heating costs are settled annually”</blockquote>
+                      </article>
+                    </div>
+                  </div>
+
+                  <div class="review-card" id="fieldsBlock">
+                    <div class="field-grid">
+                      <div class="fld" data-fld="address">
+                        <label for="fldAddress">Rental address</label>
+                        <input id="fldAddress" type="text" placeholder="Not extracted yet" autocomplete="off" />
+                        <span class="cite">Page 1 · Parties</span>
+                        <button class="use-extracted" type="button" data-use-extracted="address">Use extracted value: Musterstraße 12, 12345 Musterstadt</button>
+                      </div>
+                      <div class="fld filled">
+                        <label for="fldLandlord">Landlord or property manager</label>
+                        <input id="fldLandlord" type="text" value="Katharina Wohlgemuth, Berliner Wohnbau Verwaltung GmbH" />
+                        <span class="cite">Page 1 · Parties</span>
+                        <blockquote class="quote-box">“Landlord Katharina Wohlgemuth Berliner Wohnbau Verwaltung GmbH”</blockquote>
+                      </div>
+                      <div class="fld" data-fld="rent">
+                        <label for="fldRent">Monthly rent (€)</label>
+                        <input id="fldRent" type="text" inputmode="numeric" placeholder="Not extracted yet" autocomplete="off" />
+                        <span class="cite">Page 1 · Rent and utility costs clause</span>
+                        <button class="use-extracted" type="button" data-use-extracted="rent">Use extracted value: 1200</button>
+                      </div>
+                      <div class="fld" data-fld="deposit">
+                        <label for="fldDeposit">Deposit (€)</label>
+                        <input id="fldDeposit" type="text" inputmode="numeric" placeholder="Not extracted yet" autocomplete="off" />
+                        <span class="cite">Page 1 · Security deposit clause</span>
+                        <button class="use-extracted" type="button" data-use-extracted="deposit">Use extracted value: 2940</button>
+                      </div>
+                      <div class="fld filled">
+                        <label for="fldStart">Lease start date</label>
+                        <input id="fldStart" type="text" value="1. Oct 2026" />
+                        <span class="cite">Page 1 · Beginning and duration</span>
+                        <blockquote class="quote-box">“tenancy begins on 1 October 2026”</blockquote>
+                      </div>
+                      <div class="fld filled">
+                        <label for="fldNotice">Notice period</label>
+                        <input id="fldNotice" type="text" value="Statutory notice periods under German law (§§ 573c BGB)" />
+                        <span class="cite">Page 1 · Lease Term clause</span>
+                        <blockquote class="quote-box">“subject to the statutory notice periods under German law (§§ 573c BGB)”</blockquote>
+                      </div>
+                    </div>
+                    <div class="lease-actions">
+                      <button class="btn btn-teal" type="button" id="confirmLease">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                        Confirm and use with Landa</button>
+                      <button class="btn btn-ghost" type="button" data-replace-pdf>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                        Open original PDF</button>
+                      <button class="btn-danger-text" type="button" id="deleteLease2">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                        Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-card" id="leaseDeleted" hidden>
+                <h3>No lease loaded</h3>
+                <p style="color:var(--ink-2);font-size:.94rem">You deleted Maya's sample lease in this demo. Nothing left the demo — reset to bring the prepared example back.</p>
+                <p style="margin-top:1rem"><button class="btn btn-primary btn-small" type="button" id="restoreLease">Restore the sample lease</button></p>
+              </div>
+            </section>
+
+            <!-- DEPOSIT -->
+            <section class="demo-panel" data-dpanel-body="3" aria-label="Demo deposit options">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Deposit</span>
+                <h1>Keep your buffer for living.</h1>
+                <p class="p-sub">Compare partner-backed deposit routes and see exactly where your application stands.</p>
+              </div>
+              <div class="dep-cards">
+                <article class="dep-card">
+                  <div class="partner-name"><span>INZMO</span><span class="best-chip">BEST MATCH</span></div>
+                  <h3>Mietkautions-Police</h3>
+                  <p class="desc">A partner-issued guarantee that can keep your cash available for the move.</p>
+                  <div class="hr"></div>
+                  <div>
+                    <span class="fee-label">Fee structure</span>
+                    <div class="fee-row"><span class="fee-big">From 4.5% / year</span>
+                      <button class="btn btn-gold btn-small" type="button" id="inzmoBtn">View status
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      </button></div>
+                  </div>
+                  <div id="inzmoStatus" hidden>
+                    <div class="hr" style="margin-bottom:1rem"></div>
+                    <span class="fee-label">Application status · sample</span>
+                    <ol class="status-steps" style="margin-top:.8rem">
+                      <li class="done"><span class="dot"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span><span class="st-t">Application submitted</span><span class="st-d">Sent to Inzmo with your confirmed lease details</span></span></li>
+                      <li class="current"><span class="dot"></span><span><span class="st-t">Partner review — under review</span><span class="st-d">Inzmo checks eligibility; the decision is theirs, not ßhells'</span></span></li>
+                      <li class="todo"><span class="dot"></span><span><span class="st-t">Guarantee certificate</span><span class="st-d">Issued to your landlord once approved</span></span></li>
+                    </ol>
+                  </div>
+                  <div class="hr"></div>
+                  <p class="dep-foot">Partner decision · No deposit custody by ßhells · Transparent annual fee</p>
+                </article>
+                <article class="dep-card">
+                  <div class="partner-name"><span>ALLIANZ</span></div>
+                  <h3>Mietkautionsversicherung</h3>
+                  <p class="desc">A reviewed alternative for eligible renters who want to protect liquidity.</p>
+                  <div class="hr"></div>
+                  <div>
+                    <span class="fee-label">Fee structure</span>
+                    <div class="fee-row"><span class="fee-big">From 5.2% / year</span>
+                      <button class="btn btn-primary btn-small" type="button" id="allianzBtn">Start application
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      </button></div>
+                  </div>
+                  <form id="allianzForm" hidden>
+                    <div class="hr" style="margin-bottom:1rem"></div>
+                    <div class="app-fields">
+                      <div class="fld"><label for="appName">Full name</label><input id="appName" type="text" value="Maya Keller" /></div>
+                      <div class="fld"><label for="appRent">Monthly rent (€)</label><input id="appRent" type="text" inputmode="numeric" value="1200" /></div>
+                      <div class="fld"><label for="appDeposit">Deposit to cover (€)</label><input id="appDeposit" type="text" inputmode="numeric" value="2940" /></div>
+                      <div class="fld"><label for="appStart">Tenancy start</label><input id="appStart" type="text" value="1 Oct 2026" /></div>
+                      <p class="demo-note">Sample application, pre-filled from Maya's confirmed lease. Submitting ends the demo flow — nothing is sent to Allianz.</p>
+                      <button class="btn btn-teal" type="submit" style="justify-content:center">Submit for partner decision</button>
+                    </div>
+                  </form>
+                  <div id="allianzDone" hidden>
+                    <div class="hr" style="margin-bottom:1rem"></div>
+                    <div class="done-box">
+                      <span class="tick"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                      <h4>Submitted for partner decision</h4>
+                      <p>That's where this demo ends. In the real product, Allianz reviews eligibility and issues the policy — ßhells shows you the status, the partner decides.</p>
+                    </div>
+                  </div>
+                  <div class="hr"></div>
+                  <p class="dep-foot">Licensed partner · Terms supplied by partner · Subject to eligibility</p>
+                </article>
+              </div>
+              <p class="demo-note">Sample partner cards from the demo. Deposit products are issued by licensed partners; ßhells never holds your deposit.</p>
+            </section>
+
+            <!-- RENT -->
+            <section class="demo-panel" data-dpanel-body="4" aria-label="Demo rent verification">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Rent</span>
+                <h1>A record that counts.</h1>
+                <p class="p-sub">Verified with your consent, via evidence you submit. You own the record — and choose if it's ever shared.</p>
+              </div>
+              <div class="d-grid">
+                <div class="d-card">
+                  <h3>Rent signal</h3>
+                  <p style="font-size:1.6rem;font-weight:800">Verified <span style="color:var(--teal);font-size:.95rem;font-weight:700">✓ via submitted evidence</span></p>
+                  <dl class="kv" style="margin-top:1rem">
+                    <div><dt>Recorded by</dt><dd>An authorized reviewer</dd></div>
+                    <div><dt>Sharing</dt><dd>Off — your choice</dd></div>
+                    <div><dt>Consent</dt><dd>Withdraw any time</dd></div>
+                  </dl>
+                </div>
+                <div class="d-card">
+                  <h3>Why it matters</h3>
+                  <ul class="activity">
+                    <li><span>A good payment history becomes something useful</span></li>
+                    <li><span>No silent bank connections — evidence you submit, only</span></li>
+                    <li><span>The signal travels with you, flat to flat</span></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="d-card">
+                <h3>Payment history <span class="sample-badge">Sample</span></h3>
+                <ul class="activity">
+                  <li><span>August 2026 — €1,200 · verified on time</span><span class="when">+120 PTS</span></li>
+                  <li><span>July 2026 — €1,200 · verified on time</span><span class="when">+120 PTS</span></li>
+                  <li><span>June 2026 — €1,200 · verified on time</span><span class="when">+120 PTS</span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- REWARDS -->
+            <section class="demo-panel" data-dpanel-body="5" aria-label="Demo rewards">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Rewards</span>
+                <h1>Points for the rent you pay.</h1>
+                <p class="p-sub">Offers matched to your needs, never your data sold — introductions only with your separate, explicit consent.</p>
+              </div>
+              <div class="d-card">
+                <span class="fee-label">Reward balance</span>
+                <p class="points-big" style="margin-top:.5rem">920 <small>pts</small></p>
+                <p style="color:var(--ink-2);font-size:.93rem;margin-top:.4rem">1,240 pts earned through rent so far.</p>
+                <div style="margin-top:1rem">
+                  <div class="offer"><span>Rent verified — July<small>Earned through a verified action</small></span><b class="mono">+120 pts</b></div>
+                  <div class="offer"><span>Move plan milestones<small>Tasks completed on your plan</small></span><b class="mono">+250 pts</b></div>
+                  <div class="offer"><span>Earlier verified rent<small>Your record before this move</small></span><b class="mono">+870 pts</b></div>
+                  <div class="offer"><span>Moving-day help<small>Redeemed towards your move</small></span><b class="mono">−320 pts</b></div>
+                </div>
+              </div>
+              <div class="d-card">
+                <h3>Matched to your move</h3>
+                <div class="offer"><span>Moving-day help<small>Matched to your move stage</small></span><b class="mono">300 pts</b></div>
+                <div class="offer"><span>Home insurance review<small>Only because you asked for it</small></span><b class="mono">Free</b></div>
+                <div class="offer"><span>Furniture partner offer<small>Introduction needs your separate, explicit consent</small></span><b class="mono">Consent first</b></div>
+              </div>
+            </section>
+
+            <!-- SUPPORT -->
+            <section class="demo-panel" data-dpanel-body="6" aria-label="Demo support">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Support</span>
+                <h1>We're in your corner.</h1>
+                <p class="p-sub">A sample thread, live in the demo. Send a message — it stays in this demo workspace.</p>
+              </div>
+              <div class="d-card chat">
+                <div class="chat-log" id="supportLog" aria-live="polite">
+                  <div class="msg landa"><span class="who">ßhells support · sample thread</span>Hi Maya — your Anmeldung checklist is ready whenever you are. Anything else we can take off your plate?</div>
+                </div>
+                <form class="chat-form" id="supportForm">
+                  <input id="supportInput" type="text" placeholder="Write to support…" aria-label="Write to support" autocomplete="off" />
+                  <button class="btn btn-primary btn-small" type="submit">Send</button>
+                </form>
+              </div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section class="demo-panel" data-dpanel-body="7" aria-label="Demo settings">
+              <div class="stack" style="display:grid;gap:.7rem">
+                <span class="d-eyebrow">Settings</span>
+                <h1>Your profile, your rules.</h1>
+                <p class="p-sub">Sample profile. Edit anything — changes live only in this demo session.</p>
+              </div>
+              <div class="d-card">
+                <div class="set-row">
+                  <span class="lab"><b>Name</b><span>Shown across your workspace</span></span>
+                  <input class="set-input" id="setName" type="text" value="Maya Keller" aria-label="Name" />
+                </div>
+                <div class="set-row">
+                  <span class="lab"><b>Home</b><span>Your current move</span></span>
+                  <input class="set-input" id="setHome" type="text" value="Musterstraße 12, 12345 Musterstadt" aria-label="Home" />
+                </div>
+                <div class="set-row">
+                  <span class="lab"><b>Language</b><span>Workspace and summaries</span></span>
+                  <select class="set-input" id="setLang" aria-label="Language" style="width:auto">
+                    <option selected>English</option>
+                    <option>Deutsch</option>
+                  </select>
+                </div>
+                <div class="set-row">
+                  <span class="lab"><b>Data sharing</b><span>Off by default — your record stays yours</span></span>
+                  <button class="toggle" type="button" id="tglShare" aria-pressed="false" aria-label="Toggle data sharing"></button>
+                </div>
+                <div class="set-row">
+                  <span class="lab"><b>Partner offer introductions</b><span>Only with your separate, explicit consent</span></span>
+                  <button class="toggle" type="button" id="tglOffers" aria-pressed="false" aria-label="Toggle partner offer introductions"></button>
+                </div>
+                <div class="set-row">
+                  <span class="lab"><b>Deadline notifications</b><span>Move-plan deadlines and rent dates</span></span>
+                  <button class="toggle" type="button" id="tglNotif" aria-pressed="true" aria-label="Toggle deadline notifications"></button>
+                </div>
+                <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-top:1.1rem">
+                  <button class="btn btn-primary btn-small" type="button" id="settingsSave">Save changes</button>
+                  <span class="demo-note" id="settingsNote">Built with privacy and local context in mind. Consent-based, always.</span>
+                </div>
+              </div>
+            </section>
+
+            <p class="demo-note" style="margin-top:.4rem">Demo Renter — Maya Keller is a fictional renter; all names, addresses and figures are sample data. Changes are temporary and reset when the demo ends.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- floating: demo guide -->
+      <button class="fab guide-fab" type="button" id="guideBtn" aria-expanded="false" aria-controls="guidePop">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2 6.3-6.4 2.1 2-6.3z"/></svg>
+        Demo guide</button>
+      <div class="pop guide-pop" id="guidePop" role="dialog" aria-label="Demo guide">
+        <h3>Try the demo
+          <button class="pop-close" type="button" id="guideClose" aria-label="Close demo guide">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button></h3>
+        <p class="demo-note">Five things worth tapping. They tick off as you go.</p>
+        <button class="guide-item" type="button" data-guide-item="tasks" data-guide-goto="1">
+          <span class="gcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="gt"><b>Tick a move-plan task</b><span>Watch Maya's progress move on Overview.</span></span></button>
+        <button class="guide-item" type="button" data-guide-item="lease" data-guide-goto="2">
+          <span class="gcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="gt"><b>Confirm the lease facts</b><span>Fill the missing fields, then confirm for Landa.</span></span></button>
+        <button class="guide-item" type="button" data-guide-item="landa" data-guide-goto="2" data-guide-landa="1">
+          <span class="gcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="gt"><b>Ask Landa a question</b><span>Answers come from the lease — with the passage cited.</span></span></button>
+        <button class="guide-item" type="button" data-guide-item="inzmo" data-guide-goto="3">
+          <span class="gcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="gt"><b>Check the Inzmo status</b><span>See where a deposit application stands.</span></span></button>
+        <button class="guide-item" type="button" data-guide-item="allianz" data-guide-goto="3">
+          <span class="gcheck"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span class="gt"><b>Start the Allianz application</b><span>A short flow that ends at the partner's desk.</span></span></button>
+      </div>
+
+      <!-- floating: ask landa -->
+      <button class="fab landa-fab" type="button" id="landaBtn" aria-expanded="false" aria-controls="landaPop">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="2.5"/><path d="M12 8V4M8 4h8"/><circle cx="9" cy="13.5" r="1" fill="currentColor"/><circle cx="15" cy="13.5" r="1" fill="currentColor"/><path d="M9.5 17h5"/></svg>
+        Ask Landa<span class="dot" aria-hidden="true"></span></button>
+      <div class="pop landa-pop" id="landaPop" role="dialog" aria-label="Ask Landa — lease analysis">
+        <div class="landa-head">
+          <span class="bot"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="2.5"/><path d="M12 8V4M8 4h8"/><circle cx="9" cy="13.5" r="1" fill="currentColor"/><circle cx="15" cy="13.5" r="1" fill="currentColor"/><path d="M9.5 17h5"/></svg></span>
+          <div><b>Ask Landa</b><span>Lease Analysis</span></div>
+          <button class="pop-close" type="button" id="landaClose" aria-label="Close Ask Landa">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="chat-log" id="chatLog" aria-live="polite">
+          <div class="msg landa"><span class="who">Landa</span>Hi Maya — I've read your confirmed lease for Musterstraße 12. Ask me about your rent, your deposit, or how the lease works, and I'll answer from the document itself, with the passage cited.</div>
+        </div>
+        <div class="landa-foot">
+          <div class="chip-row">
+            <button class="qchip" type="button" data-q="pay">How can I pay deposit?</button>
+            <button class="qchip" type="button" data-q="afford">What if I can't afford to pay deposit?</button>
+            <button class="qchip" type="button" data-q="default">And what if I default on rent.</button>
+            <button class="qchip" type="button" data-q="rent">How much is my rent</button>
+          </div>
+          <form class="chat-form" id="chatForm">
+            <input id="chatInput" type="text" placeholder="Ask about your lease…" aria-label="Ask Landa about the lease" autocomplete="off" />
+            <button class="btn btn-primary btn-small" type="submit" aria-label="Send question">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+            </button>
+          </form>
+          <p class="chat-disclaimer">Landa explains information found in your confirmed lease. This is not legal advice.</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        /* ---------- demo workspace ---------- */
+        var dnavBtns = Array.prototype.slice.call(document.querySelectorAll("#demoNav [data-dpanel]"));
+        var dpanels = document.querySelectorAll("[data-dpanel-body]");
+        var landaBtn = document.getElementById("landaBtn");
+        var landaPop = document.getElementById("landaPop");
+        var guidePop = document.getElementById("guidePop");
+        var guideBtn = document.getElementById("guideBtn");
+        function closePops() {
+          landaPop.classList.remove("open");
+          guidePop.classList.remove("open");
+          landaBtn.setAttribute("aria-expanded", "false");
+          guideBtn.setAttribute("aria-expanded", "false");
+        }
+        function selectPanel(i) {
+          dnavBtns.forEach(function (b, k) { b.classList.toggle("active", k === i); });
+          dpanels.forEach(function (p, k) { p.classList.toggle("active", k === i); });
+          landaBtn.classList.toggle("show", i === 2);
+          if (i !== 2) landaPop.classList.remove("open");
+          var content = document.querySelector(".demo-content");
+          if (content) content.scrollIntoView({ block: "start" });
+        }
+        dnavBtns.forEach(function (b, i) {
+          b.addEventListener("click", function () { selectPanel(i); });
+        });
+        document.querySelectorAll("[data-goto-panel]").forEach(function (b) {
+          b.addEventListener("click", function () { selectPanel(Number(b.getAttribute("data-goto-panel"))); });
+        });
+
+        /* demo guide — items tick off as you do them */
+        function markGuide(key) {
+          var item = document.querySelector('[data-guide-item="' + key + '"]');
+          if (item) item.classList.add("done");
+        }
+        guideBtn.addEventListener("click", function () {
+          var open = guidePop.classList.toggle("open");
+          guideBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) landaPop.classList.remove("open");
+        });
+        document.getElementById("guideClose").addEventListener("click", function () {
+          guidePop.classList.remove("open");
+          guideBtn.setAttribute("aria-expanded", "false");
+        });
+        document.querySelectorAll("[data-guide-goto]").forEach(function (item) {
+          item.addEventListener("click", function () {
+            selectPanel(Number(item.getAttribute("data-guide-goto")));
+            guidePop.classList.remove("open");
+            guideBtn.setAttribute("aria-expanded", "false");
+            if (item.hasAttribute("data-guide-landa")) {
+              landaPop.classList.add("open");
+              landaBtn.setAttribute("aria-expanded", "true");
+            }
+          });
+        });
+
+        /* notifications bell */
+        var bellBtn = document.getElementById("bellBtn");
+        var bellPop = document.getElementById("bellPop");
+        bellBtn.addEventListener("click", function () {
+          var open = bellPop.classList.toggle("open");
+          bellBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+
+        /* move plan — shared progress */
+        var taskItems = Array.prototype.slice.call(document.querySelectorAll("#taskList li"));
+        function taskProgress() {
+          var done = taskItems.filter(function (li) { return li.classList.contains("done"); }).length;
+          return Math.floor((done / taskItems.length) * 100);
+        }
+        function syncProgress() {
+          var p = taskProgress();
+          ["ovProgressBar", "mpProgressBar"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.style.width = p + "%";
+          });
+          ["ovProgressLabel", "mpProgressLabel"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) el.textContent = p + "%";
+          });
+        }
+        taskItems.forEach(function (li) {
+          li.querySelector("button.task").addEventListener("click", function () {
+            li.classList.toggle("done");
+            syncProgress();
+            markGuide("tasks");
+          });
+        });
+        syncProgress();
+
+        /* ---------- lease intelligence: review -> confirm ---------- */
+        var trackedFields = [
+          { key: "address", input: "fldAddress", extracted: "Musterstraße 12, 12345 Musterstadt, 3rd floor, left-hand unit" },
+          { key: "rent", input: "fldRent", extracted: "1200" },
+          { key: "deposit", input: "fldDeposit", extracted: "2940" }
+        ];
+        var factsChip = document.getElementById("factsChip");
+        function updateFacts() {
+          var found = 3;
+          trackedFields.forEach(function (f) {
+            var input = document.getElementById(f.input);
+            var filled = input.value.trim().length > 0;
+            if (filled) found++;
+            input.closest(".fld").classList.toggle("filled", filled);
+            var chip = document.querySelector('[data-add-chip="' + f.key + '"]');
+            if (chip) chip.classList.toggle("filled", filled);
+          });
+          factsChip.textContent = found + " of 6 key facts found";
+        }
+        trackedFields.forEach(function (f) {
+          document.getElementById(f.input).addEventListener("input", updateFacts);
+        });
+        document.querySelectorAll("[data-add-chip]").forEach(function (chip) {
+          chip.addEventListener("click", function () {
+            var f = trackedFields.filter(function (x) { return x.key === chip.getAttribute("data-add-chip"); })[0];
+            if (!f) return;
+            var input = document.getElementById(f.input);
+            input.scrollIntoView({ block: "center", behavior: "smooth" });
+            input.focus({ preventScroll: true });
+          });
+        });
+        document.querySelectorAll("[data-use-extracted]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var f = trackedFields.filter(function (x) { return x.key === btn.getAttribute("data-use-extracted"); })[0];
+            if (!f) return;
+            document.getElementById(f.input).value = f.extracted;
+            updateFacts();
+          });
+        });
+        updateFacts();
+
+        var reviewBlock = document.getElementById("reviewBlock");
+        var explBlock = document.getElementById("explBlock");
+        var fieldsBlock = document.getElementById("fieldsBlock");
+        var confirmedBlock = document.getElementById("confirmedBlock");
+        var leaseMain = document.getElementById("leaseMain");
+        var leaseDeleted = document.getElementById("leaseDeleted");
+        document.getElementById("confirmLease").addEventListener("click", function () {
+          reviewBlock.hidden = true;
+          explBlock.hidden = true;
+          fieldsBlock.hidden = true;
+          confirmedBlock.hidden = false;
+          markGuide("lease");
+          confirmedBlock.scrollIntoView({ block: "center", behavior: "smooth" });
+        });
+        function deleteLease() {
+          leaseMain.hidden = true;
+          leaseDeleted.hidden = false;
+        }
+        document.getElementById("deleteLease").addEventListener("click", deleteLease);
+        document.getElementById("deleteLease2").addEventListener("click", deleteLease);
+        function resetLease() {
+          leaseMain.hidden = false;
+          leaseDeleted.hidden = true;
+          reviewBlock.hidden = false;
+          explBlock.hidden = false;
+          fieldsBlock.hidden = false;
+          confirmedBlock.hidden = true;
+          trackedFields.forEach(function (f) { document.getElementById(f.input).value = ""; });
+          updateFacts();
+          document.getElementById("replaceNote").classList.remove("show");
+        }
+        document.getElementById("restoreLease").addEventListener("click", resetLease);
+        document.querySelectorAll("[data-replace-pdf]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var note = document.getElementById("replaceNote");
+            note.classList.add("show");
+            note.scrollIntoView({ block: "center", behavior: "smooth" });
+          });
+        });
+
+        /* ---------- Ask Landa — scripted answers from the confirmed lease ---------- */
+        var LANDA = {
+          rent: {
+            text: "Your confirmed monthly rent is €1,200.00 — the warm rent. It's due in advance by the third business day of each month.",
+            quote: "“Total monthly rent (warm rent) €1,200.00”",
+            source: "Source: Page 1 · Rent and utility costs clause"
+          },
+          pay: {
+            text: "Your deposit is €2,940.00, and you don't have to pay it in one lump sum: the lease lets you pay it in three equal monthly instalments, starting when the tenancy begins.",
+            quote: "“payable in three equal monthly instalments from the start of the tenancy”",
+            source: "Source: Page 1 · Security deposit clause"
+          },
+          afford: {
+            text: "Start with what the lease itself allows: the €2,940.00 deposit can be split into three equal monthly instalments from the start of the tenancy. If even that is tight, the Deposit section of this workspace compares partner-backed routes — like a guarantee from 4.5% per year — that can keep your cash free. Those decisions stay with the licensed partner.",
+            quote: "“payable in three equal monthly instalments from the start of the tenancy”",
+            source: "Source: Page 1 · Security deposit clause"
+          },
+          notice: {
+            text: "Your lease runs for an indefinite period, and ending it follows the statutory notice periods under German law — there is no fixed end date and no separate notice period written into the document.",
+            quote: "“subject to the statutory notice periods under German law (§§ 573c BGB)”",
+            source: "Source: Page 1 · Lease term clause"
+          },
+          term: {
+            text: "There is no stated fixed end date — the lease runs for an indefinite period, and statutory notice periods apply instead of a specific number of days or months.",
+            quote: "“runs for an indefinite period.”",
+            source: "Source: Page 1 · Lease term clause"
+          },
+          utility: {
+            text: "Operating and heating costs are advances, settled once a year against actual costs — so the final amount may differ from the monthly advances you've paid.",
+            quote: "“Operating and heating costs are settled annually”",
+            source: "Source: Page 2 · Utility cost statement clause"
+          },
+          fallback: {
+            text: "I couldn't find a passage in the confirmed lease that safely supports an answer to that question.",
+            quote: null,
+            source: "Source: Confirmed lease · No verified answer"
+          }
+        };
+        function landaRoute(q) {
+          var s = q.toLowerCase();
+          if (s.indexOf("default") !== -1 || s.indexOf("miss a payment") !== -1 || s.indexOf("can't pay") !== -1 || s.indexOf("cant pay") !== -1 || s.indexOf("cannot pay") !== -1) return LANDA.fallback;
+          if (s.indexOf("afford") !== -1) return LANDA.afford;
+          if (s.indexOf("deposit") !== -1 || s.indexOf("kaution") !== -1) return LANDA.pay;
+          if (s.indexOf("notice") !== -1 || s.indexOf("terminate") !== -1 || s.indexOf("end the lease") !== -1 || s.indexOf("kündig") !== -1 || s.indexOf("kuendig") !== -1) return LANDA.notice;
+          if (s.indexOf("utilit") !== -1 || s.indexOf("heating") !== -1 || s.indexOf("operating cost") !== -1) return LANDA.utility;
+          if (s.indexOf("indefinite") !== -1 || s.indexOf("term") !== -1 || s.indexOf("how long") !== -1) return LANDA.term;
+          if (s.indexOf("rent") !== -1 || s.indexOf("pay") !== -1 || s.indexOf("cost") !== -1 || s.indexOf("much") !== -1) return LANDA.rent;
+          return LANDA.fallback;
+        }
+        var chatLog = document.getElementById("chatLog");
+        function addMsg(log, who, text, cls) {
+          var d = document.createElement("div");
+          d.className = "msg " + cls;
+          var w = document.createElement("span");
+          w.className = "who"; w.textContent = who;
+          d.appendChild(w);
+          d.appendChild(document.createTextNode(text));
+          log.appendChild(d);
+          log.scrollTop = log.scrollHeight;
+        }
+        function addLandaAnswer(ans) {
+          var d = document.createElement("div");
+          d.className = "msg landa";
+          var w = document.createElement("span");
+          w.className = "who"; w.textContent = "Landa";
+          d.appendChild(w);
+          d.appendChild(document.createTextNode(ans.text));
+          if (ans.quote) {
+            var bq = document.createElement("blockquote");
+            bq.textContent = ans.quote;
+            d.appendChild(bq);
+          }
+          var src = document.createElement("span");
+          src.className = "src-chip";
+          src.textContent = ans.source;
+          d.appendChild(src);
+          chatLog.appendChild(d);
+          chatLog.scrollTop = chatLog.scrollHeight;
+          markGuide("landa");
+        }
+        function askLanda(q, key) {
+          addLandaAnswer(key && LANDA[key] ? LANDA[key] : landaRoute(q));
+        }
+        landaBtn.addEventListener("click", function () {
+          var open = landaPop.classList.toggle("open");
+          landaBtn.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) {
+            guidePop.classList.remove("open");
+            document.getElementById("chatInput").focus({ preventScroll: true });
+          }
+        });
+        document.getElementById("landaClose").addEventListener("click", function () {
+          landaPop.classList.remove("open");
+          landaBtn.setAttribute("aria-expanded", "false");
+        });
+        document.querySelectorAll("[data-q]").forEach(function (chip) {
+          chip.addEventListener("click", function () {
+            addMsg(chatLog, "You", chip.textContent.trim(), "you");
+            askLanda(chip.textContent.trim(), chip.getAttribute("data-q"));
+          });
+        });
+        document.getElementById("chatForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var input = document.getElementById("chatInput");
+          var q = input.value.trim();
+          if (!q) return;
+          addMsg(chatLog, "You", q, "you");
+          input.value = "";
+          askLanda(q, null);
+        });
+
+        /* ---------- deposit: status + application flows ---------- */
+        var inzmoBtn = document.getElementById("inzmoBtn");
+        var inzmoStatus = document.getElementById("inzmoStatus");
+        var inzmoBtnHTML = inzmoBtn.innerHTML;
+        inzmoBtn.addEventListener("click", function () {
+          var show = inzmoStatus.hidden;
+          inzmoStatus.hidden = !show;
+          inzmoBtn.innerHTML = show
+            ? 'Hide status <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>'
+            : inzmoBtnHTML;
+          if (show) markGuide("inzmo");
+        });
+        var allianzBtn = document.getElementById("allianzBtn");
+        var allianzForm = document.getElementById("allianzForm");
+        var allianzDone = document.getElementById("allianzDone");
+        var allianzBtnHTML = allianzBtn.innerHTML;
+        allianzBtn.addEventListener("click", function () {
+          allianzForm.hidden = false;
+          allianzBtn.disabled = true;
+          allianzBtn.textContent = "Application started";
+          document.getElementById("appName").focus({ preventScroll: true });
+          allianzForm.scrollIntoView({ block: "center", behavior: "smooth" });
+        });
+        allianzForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          allianzForm.hidden = true;
+          allianzDone.hidden = false;
+          allianzBtn.textContent = "Application submitted";
+          markGuide("allianz");
+          allianzDone.scrollIntoView({ block: "center", behavior: "smooth" });
+        });
+        function resetDeposit() {
+          inzmoStatus.hidden = true;
+          inzmoBtn.innerHTML = inzmoBtnHTML;
+          allianzForm.hidden = true;
+          allianzForm.reset();
+          allianzDone.hidden = true;
+          allianzBtn.disabled = false;
+          allianzBtn.innerHTML = allianzBtnHTML;
+        }
+
+        /* support — local thread */
+        var supportLog = document.getElementById("supportLog");
+        document.getElementById("supportForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var input = document.getElementById("supportInput");
+          var q = input.value.trim();
+          if (!q) return;
+          addMsg(supportLog, "You", q, "you");
+          input.value = "";
+          addMsg(supportLog, "ßhells support · demo", "Thanks, Maya — noted on your (sample) thread. In the real product, a person replies here; in the demo, this thread is yours to play with.", "landa");
+        });
+
+        /* settings — session-only */
+        var settingsInitial = {
+          name: document.getElementById("setName").value,
+          home: document.getElementById("setHome").value,
+          lang: document.getElementById("setLang").value,
+          share: document.getElementById("tglShare").getAttribute("aria-pressed"),
+          offers: document.getElementById("tglOffers").getAttribute("aria-pressed"),
+          notif: document.getElementById("tglNotif").getAttribute("aria-pressed")
+        };
+        ["tglShare", "tglOffers", "tglNotif"].forEach(function (id) {
+          var t = document.getElementById(id);
+          t.addEventListener("click", function () {
+            t.setAttribute("aria-pressed", t.getAttribute("aria-pressed") === "true" ? "false" : "true");
+          });
+        });
+        var settingsNoteDefault = document.getElementById("settingsNote").textContent;
+        document.getElementById("settingsSave").addEventListener("click", function () {
+          document.getElementById("settingsNote").textContent = "Saved — for this demo session only. Reset or end the demo to restore Maya's sample profile.";
+        });
+        function resetSettings() {
+          document.getElementById("setName").value = settingsInitial.name;
+          document.getElementById("setHome").value = settingsInitial.home;
+          document.getElementById("setLang").value = settingsInitial.lang;
+          document.getElementById("tglShare").setAttribute("aria-pressed", settingsInitial.share);
+          document.getElementById("tglOffers").setAttribute("aria-pressed", settingsInitial.offers);
+          document.getElementById("tglNotif").setAttribute("aria-pressed", settingsInitial.notif);
+          document.getElementById("settingsNote").textContent = settingsNoteDefault;
+        }
+
+        /* ---------- demo reset (Reset button + End demo) ---------- */
+        var initialTasks = taskItems.map(function (li) { return li.classList.contains("done"); });
+        var initialChat = chatLog.innerHTML;
+        var initialSupport = supportLog.innerHTML;
+        function resetDemo() {
+          taskItems.forEach(function (li, i) { li.classList.toggle("done", initialTasks[i]); });
+          syncProgress();
+          chatLog.innerHTML = initialChat;
+          supportLog.innerHTML = initialSupport;
+          resetLease();
+          resetDeposit();
+          resetSettings();
+          document.querySelectorAll("[data-guide-item]").forEach(function (item) { item.classList.remove("done"); });
+          bellPop.classList.remove("open");
+          bellBtn.setAttribute("aria-expanded", "false");
+          closePops();
+          selectPanel(0);
+          window.scrollTo(0, 0);
+        }
+        document.getElementById("demoReset").addEventListener("click", resetDemo);
+        document.getElementById("endDemo").addEventListener("click", resetDemo);
+
+      })();
+    </script>
+  </body>
+</html>
