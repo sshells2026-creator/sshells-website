@@ -7,7 +7,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#050D14" id="themeColorMeta" />
     <script>
-      try { var _t = localStorage.getItem('sshells-theme'); document.documentElement.setAttribute('data-theme', (_t === 'dark' || _t === 'light') ? _t : 'dark'); } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+      document.documentElement.setAttribute('data-theme', 'dark');
     </script>
     <title>ßhells — Your rent should work harder for you</title>
 <style>
@@ -65,7 +65,7 @@
   footer{background:#0B1729;color:#C9D2DE;margin-top:64px}
   footer .wrap{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px;padding:48px 28px}
   footer b{color:#fff;display:block;margin-bottom:14px;font-size:14px}
-  footer span{display:block;font-size:14px;margin-bottom:10px}
+  footer span,footer a{display:block;font-size:14px;margin-bottom:10px;color:inherit;text-decoration:none}footer a:hover{color:#fff}
   footer .fine{border-top:1px solid #24334D;padding:18px 28px;font-size:12.5px;color:#8A97A8}
   .note{margin-top:26px;font-size:12.5px;color:var(--ink);text-align:center;line-height:1.6}
   .partner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
@@ -405,13 +405,15 @@ html[data-theme="dark"] .bt{background:#0F1E36;border-color:#24334D;color:#E8EDF
 html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
 
 .reward-disclaimer{max-width:640px;margin:22px auto 0;text-align:center;font-size:14px;line-height:1.55;color:var(--ink);opacity:.85}
+  /* v9: loop sits directly on the page background, no card (GoTyme-style) */
+  .loop-svg,html[data-theme="dark"] .loop-svg,html[data-theme="light"] .loop-svg{background:transparent;border:none;box-shadow:none;border-radius:0}
 </style>
 </head>
 <body>
 <nav class="topnav">
     <div class="brand">ß<span>hells</span></div>
     <div class="nav-pill"><a href="#rewards">Rewards</a><a href="#partners">Partners</a><a href="#research">Research</a><a href="#faq">FAQ</a></div>
-    <div class="nav-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme">☀</button><a class="btn small nav-cta" href="#waitlist">Join the waitlist</a></div>
+    <div class="nav-right"><a class="btn small nav-cta" href="#waitlist">Join the waitlist</a></div>
   </nav>
 <div class="wrap">
 
@@ -440,7 +442,7 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
     <h2>Renting, handled in one place.</h2>
     <p class="sec-sub">Four things renters actually need.</p>
     <div class="prod-grid">
-      <div class="prod flip">
+      <div class="prod flip" id="move">
         <div class="flip-inner">
           <div class="flip-front">
             <div class="prod-body"><h3>Move</h3><p>A plan for the whole move — tasks, dates and documents, before anything is urgent.</p><span class="flip-hint">See more →</span></div>
@@ -451,7 +453,7 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
           </div>
         </div>
       </div>
-      <div class="prod flip">
+      <div class="prod flip" id="lease">
         <div class="flip-inner">
           <div class="flip-front">
             <div class="prod-body"><h3>Lease</h3><p>Know what you're signing — every clause in plain language, before you sign.</p><span class="flip-hint">See more →</span></div>
@@ -462,7 +464,7 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
           </div>
         </div>
       </div>
-      <div class="prod flip">
+      <div class="prod flip" id="deposit">
         <div class="flip-inner">
           <div class="flip-front">
             <div class="prod-body"><h3>Deposit</h3><p>Your Kaution, without the cash locked away. Compare deposit options in one place.</p><span class="flip-hint">See more →</span></div>
@@ -487,7 +489,7 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="about">
     <div class="split">
       <div>
         <h2>Good behaviour should be rewarded.</h2>
@@ -556,7 +558,7 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
+  <section class="section" style="padding-top:0" id="milestones">
     <h2>On the road.</h2>
     <p class="sec-sub">Milestones so far.</p>
     <div class="partner-grid mile-grid">
@@ -613,6 +615,10 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
         <button class="faq-q" aria-expanded="false">Do I need an account to try it?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="faq-a"><p>No. The demo and the waitlist need no sign-in.</p></div>
       </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">Is my banking data safe?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="faq-a"><p>Yes — by design. The connection is read-only: it can see that rent was paid, never move your money. We never touch your bank login, and we keep only the fact of payment — not your balances or transactions. Your record is yours, shared only when you choose.</p></div>
+      </div>
     </div>
   </section>
 
@@ -667,9 +673,9 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
 <footer>
   <div class="wrap">
     <div><b style="font-family:Georgia,serif;font-size:26px">ßhells</b><span>Financial infrastructure for renters.</span><span>Your rent should work harder for you.</span></div>
-    <div><b>Product</b><span>Move</span><span>Deposit</span><span>Lease</span><span>Rewards</span></div>
-    <div><b>Company</b><span>About</span><span>Careers</span><span>Contact</span><span>Press</span></div>
-    <div><b>Legal</b><span>Privacy</span><span>Terms</span><span>Imprint</span></div>
+    <div><b>Product</b><a href="#move">Move</a><a href="#deposit">Deposit</a><a href="#lease">Lease</a><a href="#rewards">Rewards</a></div>
+    <div><b>Company</b><a href="#about">About</a><a href="#waitlist">Careers</a><a href="#waitlist">Contact</a><a href="#milestones">Press</a></div>
+    <div><b>Legal</b><a href="#faq">Privacy</a><a href="#waitlist">Terms</a><span>Imprint</span></div>
   </div>
   <div class="fine"><div class="wrap">© 2026 ßhells</div></div>
 </footer>
@@ -678,25 +684,6 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
   var SUPABASE_URL = "https://mchajwbcgoqfmfrcnoom.supabase.co";
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1jaGFqd2JjZ29xZm1mcmNub29tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5ODc3ODYsImV4cCI6MjEwNzU2Mzc4Nn0.GoSzWeKqxDy2aMUzvjdcl4wjNBYz8PTqiikYzXUE9Mo";
 </script>
-<script>
-      (function () {
-        var btn = document.getElementById('themeToggle');
-        var meta = document.getElementById('themeColorMeta');
-        function render() {
-          var dark = document.documentElement.getAttribute('data-theme') === 'dark';
-          btn.textContent = dark ? '\u2600' : '\u263e';
-          btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
-          if (meta) meta.setAttribute('content', dark ? '#050D14' : '#FBFBFB');
-        }
-        btn.addEventListener('click', function () {
-          var dark = document.documentElement.getAttribute('data-theme') !== 'dark';
-          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-          try { localStorage.setItem('sshells-theme', dark ? 'dark' : 'light'); } catch (e) {}
-          render();
-        });
-        render();
-      })();
-    </script>
 <script>
       document.querySelectorAll(".faq-q").forEach(function (b) {
         b.addEventListener("click", function () {
