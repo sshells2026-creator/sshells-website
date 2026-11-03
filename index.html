@@ -407,6 +407,13 @@ html[data-theme="dark"] .bt.logo{background:#fffdf8;border-color:var(--line)}
 .reward-disclaimer{max-width:640px;margin:22px auto 0;text-align:center;font-size:14px;line-height:1.55;color:var(--ink);opacity:.85}
   /* v9: loop sits directly on the page background, no card (GoTyme-style) */
   .loop-svg,html[data-theme="dark"] .loop-svg,html[data-theme="light"] .loop-svg{background:transparent;border:none;box-shadow:none;border-radius:0}
+
+  /* Mobile: product cards stack full-width (was 2 narrow columns -> one word per line) */
+  @media(max-width:600px){
+    .prod-grid{grid-template-columns:1fr}
+    .prod-body h3{font-size:22px}
+    .prod-body p{font-size:16px;line-height:1.6}
+  }
 </style>
 </head>
 <body>
